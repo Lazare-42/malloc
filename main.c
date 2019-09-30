@@ -10,7 +10,7 @@ int main()
 {
 
     char    *test;
-    char test_string[256] = "coucou";
+    char test_string[256] = "o";
     unsigned int i = 0;
     unsigned int z = 0;
 
@@ -19,7 +19,7 @@ int main()
     {
         fprintf(stderr, "Starting malloc number %d\n", z);
         i = 0;
-        test = my_malloc(strlen(test_string));
+        test = my_malloc(strlen(test_string) + 1);
         if (test == NULL)
         {
             fprintf(stderr, "FAILURE NULL pointer received after malloc\n");

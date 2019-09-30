@@ -1,6 +1,17 @@
 #!/bin/bash
 
-make
 rm "./my_test"
-gcc -Wall -Wextra -Werror -fsanitize=address -o "my_test" -L. -lmalloc main.c 
-exec "./my_test"
+make
+if [ $? -ne 0 ]
+then 
+    echo "exiting script"
+else
+    #$(gcc -Wall -Wextra -Werror   -o "my_test" -L. -lmalloc main.c)
+    $(gcc -Wall -Wextra -Werror  -fsanitize=address -o "my_test" -L. -lmalloc main.c)
+    if [ $? -ne 0 ]
+    then
+        echo "could not compile"
+    else
+        exec "./my_test"
+    fi
+fi

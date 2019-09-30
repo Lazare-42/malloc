@@ -20,6 +20,7 @@
 # define SIXTH_BIT      (0x20)
 # define SEVENTH_BIT    (0x40)
 # define EIGHTH_BIT     (0x80) 
+# define align4(x) (((((x)-1)>>2)<<2)+4)
 
 struct s_block 
 {
