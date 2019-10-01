@@ -10,7 +10,7 @@ OBJS = $(addprefix $(ODIR)/, $(SRCS:.c=.o))
 
 INCLUDES = ./includes/
 
-FLAGS = -Wextra -Werror -Wall -std=c99 -fno-stack-protector -pg -g3 -fsanitize=address
+FLAGS = -Wextra -Werror -Wall -std=c99 -fno-stack-protector -pg -g3 #-fsanitize=address
 
 COMPILER = $$(command -v gcc)
 

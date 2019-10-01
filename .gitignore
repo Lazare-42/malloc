@@ -1,8 +1,17 @@
+# Vim files
 *~
 *.swp
 *.swo
+
+# Object directory & files
 bin
 bin/*
+
+# OSX specific files
 *.dYSM
 .DS_Store
+
+# executables / library
 a.out
+*.a
+my_test
