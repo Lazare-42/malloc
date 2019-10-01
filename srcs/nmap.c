@@ -8,7 +8,7 @@
  *      1. NULL to point to a "fake" address
  *      2. getpagesize() * szt_pssd_page_number_to_allocate to use a multiple of a system page
  *      3. PROT_READ | PROT_WRITE to read & write allocated memory
- *      4. MAP_SHARED | MAP_ANONYMOUS to share modifications to all processes & sub-processes and
+ *      4. MAP_SHARED | MAP_PRIVATE
  *   to get a fresh memory area that shares no pages with other mappings (obtained memory is initialized to ZERO)
  */
 void    *Fptr_void__nmap(size_t szt_pssd_page_number_to_allocate)
@@ -16,9 +16,8 @@ void    *Fptr_void__nmap(size_t szt_pssd_page_number_to_allocate)
     void *ptr_lcl_new_memory;
 
     ptr_lcl_new_memory = NULL;
-    ptr_lcl_new_memory = mmap(NULL, getpagesize()
-    * szt_pssd_page_number_to_allocate, PROT_READ | PROT_WRITE,
-    MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+    ptr_lcl_new_memory = mmap(NULL, szt_pssd_page_number_to_allocate, 
+    PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
     /**
      *  No need to check for NULL ; functions calling Fptr_void__nmap
      *  will do so
@@ -34,50 +33,62 @@ struct s_block        *Fptr_stc_init_memory_block(struct s_block *ptr_pssd_memor
     return (ptr_pssd_memory_block_to_init);
 }
 
-struct s_manipulation *Fptr_stc_manipulation__init_manipulation(struct s_manipulation *ptr_pssd_manipulation_structure, size_t szt_pssd_initialization_size)
+size_t Fst__find_upper_page_size(struct s_manipulation *ptr_pssd_manipulation_structure, size_t szt_pssd_requested_size)
 {
-    uint64_t                u64_lcl_browse_to_initialize_structs;
+    uint64_t    u64_lcl_upper_page_size;
 
-    u64_lcl_browse_to_initialize_structs            = ZERO;
-    (void)u64_lcl_browse_to_initialize_structs;
-    (void)ptr_pssd_manipulation_structure;
-    (void)szt_pssd_initialization_size;
+    u64_lcl_upper_page_size = ZERO;
+    u64_lcl_upper_page_size = (float)(((szt_pssd_requested_size / ptr_pssd_manipulation_structure->u64_pagesize) + 1) - (float)((float)(szt_pssd_requested_size) / (float)ptr_pssd_manipulation_structure->u64_pagesize)) * (float)ptr_pssd_manipulation_structure->u64_pagesize;
+    
+    return (u64_lcl_upper_page_size);
+}
+
+struct s_manipulation *Fptr_stc_manipulation__init_manipulation(struct s_manipulation *ptr_pssd_manipulation_structure)
+{
+    uint64_t                szt_lcl_minimum_initialization_size;
+
+    szt_lcl_minimum_initialization_size                             = ZERO;
+    ptr_pssd_manipulation_structure->u64_pagesize                   = getpagesize();
+    ptr_pssd_manipulation_structure->ptr_stc_tiny_block_container   = NULL;
+    ptr_pssd_manipulation_structure->ptr_stc_small_block_container  = NULL;
+    ptr_pssd_manipulation_structure->ptr_stc_large_block_container  = NULL;
+    ptr_pssd_manipulation_structure->ptr_stc_page_linked_list       = NULL;
+
+    szt_lcl_minimum_initialization_size = Fszt__align16(sizeof(struct s_block_container))
+    + MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS 
+    * (Fszt__align16(sizeof(struct s_block)) + TINY) 
+    + Fszt__align16(sizeof(struct s_page_node));
+    fprintf(stderr, "%ld\n", Fst__find_upper_page_size(ptr_pssd_manipulation_structure, szt_lcl_minimum_initialization_size));
+    if (NULL == (ptr_pssd_manipulation_structure->ptr_stc_page_linked_list = Fptr_void__nmap(szt_lcl_minimum_initialization_size)))
+    {
+    return (NULL);
+    }
+    szt_lcl_minimum_initialization_size = Fszt__align16(sizeof(struct s_block_container))
+    + MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS 
+    * (Fszt__align16(sizeof(struct s_block)) + SMALL) 
+    + Fszt__align16(sizeof(struct s_page_node));
+    fprintf(stderr, "%ld\n", Fst__find_upper_page_size(ptr_pssd_manipulation_structure, szt_lcl_minimum_initialization_size));
+    if (NULL == (ptr_pssd_manipulation_structure->ptr_stc_page_linked_list = Fptr_void__nmap(szt_lcl_minimum_initialization_size)))
+    {
+    return (NULL);
+    }
     return (ptr_pssd_manipulation_structure);
 }
 
 struct s_manipulation *Fptr_stc_manipulation__create_manipulation_structure(void)
 {
     struct s_manipulation   *ptr_stc_lcl_manipulation_structure;
-    size_t                  szt_lcl_minimum_initialization_size;
-    size_t                  szt_lcl_left_over_space_for_tiny_block;
+    uint64_t                u64_lcl_required_number_of_pages_for_manipulation_structure;
 
-    ptr_stc_lcl_manipulation_structure              = NULL;
-    szt_lcl_minimum_initialization_size             = ZERO;
-    szt_lcl_left_over_space_for_tiny_block          = ZERO;
-    /**
-     *  Calculate page number sufficient to contain the manipulation structure
-     *  and the zone for 
-     *  (MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS * TINY) 
-     *  (MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS * SMALL) 
-     *  along with their back-pointer localisations in the main structure
-     */
-    szt_lcl_minimum_initialization_size = sizeof(struct s_manipulation)
-    + MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS 
-    * (Fszt__align16(sizeof(struct s_block)) + TINY) 
-    + MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS 
-    * (Fszt__align16(sizeof(struct s_block)) + SMALL)
-    + sizeof(struct s_block*) * (MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS * 2);
-
-    /**
-     *  Calculate the extra space left we will use for tiny allocations.
-     */
-    szt_lcl_left_over_space_for_tiny_block = ((float)(szt_lcl_minimum_initialization_size / getpagesize() + 1) - (float)((float)szt_lcl_minimum_initialization_size / (float)getpagesize())) * getpagesize() / (Fszt__align16(sizeof(struct s_block)) + TINY);
-    //fprintf(stderr, "need %ld size which is %f pages\n", szt_lcl_minimum_initialization_size, );
-    fprintf(stderr, "there is extra space for %ld tiny blocks\n", szt_lcl_left_over_space_for_tiny_block );
-    //fprintf(stderr, "Leaves space for %d\n", 
-    if (NULL == (ptr_stc_lcl_manipulation_structure = Fptr_void__nmap(1)))
+    ptr_stc_lcl_manipulation_structure = NULL;
+    u64_lcl_required_number_of_pages_for_manipulation_structure = 1;
+    while (Fszt__align16(sizeof(struct s_manipulation)) > u64_lcl_required_number_of_pages_for_manipulation_structure * getpagesize())
+    {
+    u64_lcl_required_number_of_pages_for_manipulation_structure++;
+    }
+    if (NULL == (ptr_stc_lcl_manipulation_structure = Fptr_void__nmap(u64_lcl_required_number_of_pages_for_manipulation_structure)))
     {
         return NULL;
     }
-    return (ptr_stc_lcl_manipulation_structure);
+    return (Fptr_stc_manipulation__init_manipulation(ptr_stc_lcl_manipulation_structure));
 }

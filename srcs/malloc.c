@@ -63,8 +63,9 @@ size_t Fszt__align16(size_t number)
 void    *my_malloc(size_t size)
 {
     static struct s_manipulation    *ptr_stc_lcl_manipulation_structure = NULL;
-    struct s_block                  *ptr_stc_struct_where_to_store_malloc;
+//    struct s_block                  *ptr_stc_struct_where_to_store_malloc;
 
+    (void)size;
     /**
      *  If the manipulation structure is set to NULL, initialize it.
      */
@@ -76,29 +77,29 @@ void    *my_malloc(size_t size)
             return NULL;
         }
     }
-    if (size <= TINY)
-    {
-        if (ptr_stc_lcl_manipulation_structure->u64_size_of_tiny_memory_pointer - 1 == ptr_stc_lcl_manipulation_structure->u64_first_free_location_for_tiny_pointer)
-        {
-            fprintf(stderr, "Re-allocing double pointer for tiny mallocs not managed yet\n");
-            return (NULL);
-        }
-        ptr_stc_struct_where_to_store_malloc = ptr_stc_lcl_manipulation_structure->ptr_stc_block_tiny_blocks[ptr_stc_lcl_manipulation_structure->u64_first_free_location_for_tiny_pointer];
-    }
-    else if (size <= SMALL)
-    {
-        if (ptr_stc_lcl_manipulation_structure->u64_size_of_small_memory_pointer - 1 == ptr_stc_lcl_manipulation_structure->u64_first_free_location_for_small_pointer)
-        {
-            fprintf(stderr, "Re-allocing double pointer for small mallocs not managed yet\n");
-            return (NULL);
-        }
-        ptr_stc_struct_where_to_store_malloc = ptr_stc_lcl_manipulation_structure->ptr_stc_block_small_blocks[ptr_stc_lcl_manipulation_structure->u64_first_free_location_for_small_pointer];
-    }
-    else
-    {
-        fprintf(stderr, "Allocing double pointer & simple pointer for large mallocs not managed yet\n");
-        return (NULL);
-    }
+//    if (size <= TINY)
+//    {
+//        if (ptr_stc_lcl_manipulation_structure->u64_size_of_tiny_memory_pointer - 1 == ptr_stc_lcl_manipulation_structure->u64_first_free_location_for_tiny_pointer)
+//        {
+//            fprintf(stderr, "Re-allocing double pointer for tiny mallocs not managed yet\n");
+//            return (NULL);
+//        }
+//        ptr_stc_struct_where_to_store_malloc = ptr_stc_lcl_manipulation_structure->ptr_stc_block_tiny_blocks[ptr_stc_lcl_manipulation_structure->u64_first_free_location_for_tiny_pointer];
+//    }
+//    else if (size <= SMALL)
+//    {
+//        if (ptr_stc_lcl_manipulation_structure->u64_size_of_small_memory_pointer - 1 == ptr_stc_lcl_manipulation_structure->u64_first_free_location_for_small_pointer)
+//        {
+//            fprintf(stderr, "Re-allocing double pointer for small mallocs not managed yet\n");
+//            return (NULL);
+//        }
+//        ptr_stc_struct_where_to_store_malloc = ptr_stc_lcl_manipulation_structure->ptr_stc_block_small_blocks[ptr_stc_lcl_manipulation_structure->u64_first_free_location_for_small_pointer];
+//    }
+//    else
+//    {
+//        fprintf(stderr, "Allocing double pointer & simple pointer for large mallocs not managed yet\n");
+//        return (NULL);
+//    }
     return NULL;
     //return (Fptr_void_get_and_set_block(size, ptr_stc_struct_where_to_store_malloc));
 }
