@@ -10,7 +10,7 @@ int main()
 {
 
     char    *test;
-    char test_string[256] = "o";
+    char test_string[256] = "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssso";
     unsigned int i = 0;
     unsigned int z = 0;
 

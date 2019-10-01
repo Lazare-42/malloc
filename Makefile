@@ -1,6 +1,7 @@
 NAME = libmalloc.a
 
-SRCS = malloc.c
+SRCS = malloc.c \
+	   nmap.c
 
 SRCS_DIR = ./srcs
 
@@ -10,7 +11,7 @@ OBJS = $(addprefix $(ODIR)/, $(SRCS:.c=.o))
 
 INCLUDES = ./includes/
 
-FLAGS = -Wextra -Werror -Wall -std=c99 -fno-stack-protector -pg -g3 #-fsanitize=address
+FLAGS = -Wextra -Werror -Wall -std=c99 -fno-stack-protector -pg -g3 -fsanitize=address
 
 COMPILER = $$(command -v gcc)
 
