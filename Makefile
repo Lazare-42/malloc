@@ -1,7 +1,8 @@
 NAME = libmalloc.a
 
-SRCS = malloc.c \
-	   nmap.c
+SRCS = 	malloc.c \
+	   	nmap.c \
+		cal_page_size.c
 
 SRCS_DIR = ./srcs
 

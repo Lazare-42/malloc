@@ -2,7 +2,7 @@
 #include "malloc.h"
 
 
-size_t Fszt__align16(size_t number)
+size_t Fu64__align16(size_t number)
 {
     return (number + 16 - number % 16);
 }
@@ -37,7 +37,7 @@ size_t Fszt__align16(size_t number)
 //    /**
 //     *  Set the size of the current malloced block
 //     */
-//    u64_lcl_size_of_current_block = Fszt__align16(u64_pssd_size_to_use + sizeof(struct s_block));
+//    u64_lcl_size_of_current_block = Fu64__align16(u64_pssd_size_to_use + sizeof(struct s_block));
 //
 //    /**
 //     *  Set memory of current block
