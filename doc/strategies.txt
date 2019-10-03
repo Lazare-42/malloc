@@ -1,0 +1,56 @@
+Sequential fit algorithms use Knuth's boundar tag technique to support coalescing of all adjacent free areas.
+
+The list of free blocks is usually maintained in one of three ways :
+    1. LIFO
+    2. FIFO
+    3. AO (address order)
+
+and free blocks are allocated from this list in one of three ways :
+    1. FIRST FIT    : the list is searched from the beginning, retuning the first block
+    large enough to satisfy the request (first fit);
+    2. NEXT FIT     : the list is searched from the place where the last search left off,
+    retuning the next block large enough the satisfy the request
+    3. BEST FIT     : the list is searched exhaustively, retuning the smallest block 
+    large enough the satisfy the request
+
+    ==> these are allocation policies.
+    Each of these policies has several different possible implementations :
+        - BEST FIT can be implemented using a tree of lists of same-size objects
+        - FIRST FIT can be implemented using a cartesian tree.
+
+FIRST FIT :
+    If a block is larger than necessary, it is split, and the remainder is put
+    on the free list.
+    Problem : larger block near the beginning of the list tend to be split first 
+    and the remaining fragments result in a lot of small free blocks near the 
+    beginning of the list.
+
+NEXT FIT :
+    "Optimization" of first use : use a roving pointer, that records where
+    the last search was satisfied, and the next search begins from there.
+
+BEST FIT :
+    Because of the time costs of an exhaustive search, it is often dismissed.
+    Yet, by taking advantage of the observation that most programs use a large 
+    number of objects of just a few sizes, a best-fit policy can be quite 
+    efficiently implemented as a binary tree of lists of same-sized objects.
+
+    In addition, segregated fit algorithms can be a very good approximation of
+    best fit and are easy to implement efficiently.
+
+    SEGREGATED FREE LISTS :
+    Use a set of free lists. When a block of memory is freed, it is simply pushed
+    onto the free list for that size.
+    One common variation is to use size classes to group similar object sizes
+    togetjer onto a single free list.
+    A common size-class scheme is to use size classes that are a power of two 
+    apart and round the requested size up to the nearest size class.
+    A variation is to use N + 2/3 * N size.
+
+    SEGREGATED FIT ALGORITHMS : 
+    Uses a set of free lists, with each list holding free blocks of any size
+    between this size class and the next larger size class.
+    When servicing a request for a particular size, the free list for the corresponding
+    size class is searched for a block at least large enough the hold it.
+
+
