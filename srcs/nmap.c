@@ -88,14 +88,17 @@ uint8_t Fu8__alloc_realloc_block_container(struct s_manipulation *ptr_pssd_manip
     /**
      *  Save the number of elements in the newly created block
      */
-    ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer = Fu64__get_number_of_structure_in_default_page_size(u64_lcl_size_of_page, sizeof(struct s_block*));    
+    ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer = Fu64__get_number_of_structure_in_default_page_size(u64_lcl_size_of_page - (sizeof(struct s_block_container) + sizeof(struct s_block **)), sizeof(struct s_block*));
 
+    fprintf(stderr, "Size of page is %20llu, maximum size should be %20llu, is %20llu\n", u64_lcl_size_of_page, ((uint64_t)465 * sizeof(struct s_block *)),ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer * (uint64_t)sizeof(struct s_block *));
+    fprintf(stderr, "The beginning of the new structure has been set %20llu from beginning of structure pointer\n", (uint64_t)sizeof(struct s_block_container) - sizeof(struct s_block  **));
     /**
      *  Initialize the new pointers by setting them to NULL
      */
+    ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->ptr_stc_block_container = (struct s_block  **)((uint8_t*)&(ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc[sizeof(struct s_block_container) - sizeof(struct s_block  **)]));
     while (u64_lcl_browse_page_to_initalize < ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer)
     {
-        fprintf(stderr, "Here at %20llu\n", u64_lcl_browse_page_to_initalize);
+        fprintf(stderr, "Here at %20llu, size of pointer is %20llu %20llu from beginning\n", u64_lcl_browse_page_to_initalize, ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer, u64_lcl_browse_page_to_initalize * sizeof(struct s_block*) + (sizeof(struct s_block_container) + sizeof(struct s_block **)));
         ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->ptr_stc_block_container[u64_lcl_browse_page_to_initalize] = NULL;
         u64_lcl_browse_page_to_initalize = u64_lcl_browse_page_to_initalize + 1;
     }
@@ -109,20 +112,14 @@ struct s_manipulation *Fptr_stc_manipulation__init_manipulation(struct s_manipul
 
     u64_lcl_minimum_initialization_size                             = ZERO;
     ptr_pssd_manipulation_structure->u64_pagesize                   = getpagesize();
-    Fu8__alloc_realloc_block_container(ptr_pssd_manipulation_structure, 345);
     ptr_pssd_manipulation_structure->ptr_stc_tiny_block_container   = NULL;
     ptr_pssd_manipulation_structure->ptr_stc_small_block_container  = NULL;
     ptr_pssd_manipulation_structure->ptr_stc_large_block_container  = NULL;
     ptr_pssd_manipulation_structure->ptr_stc_page_linked_list       = NULL;
 
-    if (NULL == (ptr_pssd_manipulation_structure->ptr_stc_page_linked_list = Fptr_void__nmap(u64_lcl_minimum_initialization_size)))
-    {
-    return (NULL);
-    }
-    if (NULL == (ptr_pssd_manipulation_structure->ptr_stc_page_linked_list = Fptr_void__nmap(u64_lcl_minimum_initialization_size)))
-    {
-    return (NULL);
-    }
+    Fu8__alloc_realloc_block_container(ptr_pssd_manipulation_structure, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS);
+    ptr_pssd_manipulation_structure->ptr_stc_tiny_block_container = ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc;
+    ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc = NULL;
     return (ptr_pssd_manipulation_structure);
 }
 
@@ -137,7 +134,7 @@ struct s_manipulation *Fptr_stc_manipulation__create_manipulation_structure(void
     {
     u64_lcl_required_number_of_pages_for_manipulation_structure++;
     }
-    if (NULL == (ptr_stc_lcl_manipulation_structure = Fptr_void__nmap(u64_lcl_required_number_of_pages_for_manipulation_structure)))
+    if (NULL == (ptr_stc_lcl_manipulation_structure = Fptr_void__nmap(u64_lcl_required_number_of_pages_for_manipulation_structure * getpagesize())))
     {
         return NULL;
     }
