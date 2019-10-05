@@ -9,8 +9,9 @@ struct s_node_pointer_container {
 struct s_block {
     uint64_t            u64_size_;
     uint64_t            u64_free_size_;
-    struct s_page       *ptr_page_base_;
+    uint8_t             *u8_memory_;
     struct s_block      *ptr_next_;
+    struct s_page       *ptr_page_base_;
 };
 
 struct s_page {

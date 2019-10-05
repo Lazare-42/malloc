@@ -31,96 +31,84 @@ void    *Fptr_void__nmap(uint64_t u64_pssd_page_number_to_allocate)
     return (ptr_lcl_new_memory);
 }
 
-struct s_block        *Fptr_stc_init_memory_block(struct s_block *ptr_pssd_memory_block_to_init, uint64_t u64_pssd_size_of_memory_to_initialize)
+void    Fptr_stc_init_memory_block(struct s_block 
+        **ptr_pssd_memory_block_to_init, struct s_page *ptr_pssd_page_base, 
+        uint64_t u64_pssd_size_of_memory_to_initialize, 
+        struct s_block *ptr_pssd_next_block)
 {
-    ptr_pssd_memory_block_to_init->u64_total_size                   = u64_pssd_size_of_memory_to_initialize;
-    ptr_pssd_memory_block_to_init->u64_free_size                    = ZERO;
-    ptr_pssd_memory_block_to_init->u64_position_in_double_pointer   = ZERO;
-    return (ptr_pssd_memory_block_to_init);
+    (*ptr_pssd_memory_block_to_init)->u64_size_        = u64_pssd_size_of_memory_to_initialize;
+    (*ptr_pssd_memory_block_to_init)->u64_free_size_   = u64_pssd_size_of_memory_to_initialize;
+    (*ptr_pssd_memory_block_to_init)->ptr_next_        = ptr_pssd_next_block;
+    (*ptr_pssd_memory_block_to_init)->ptr_page_base_   = ptr_pssd_page_base;
 }
 
-uint8_t Fu8__alloc_realloc_block_container(struct s_manipulation *ptr_pssd_manipulation_structure, uint64_t u64_pssd_number_of_pointers_for_double_pointer)
+struct s_page       *Fptr_stc_init_blocks_in_page(struct s_page *ptr_pssd_new_page)
 {
-    uint64_t                    u64_lcl_size_of_page;
-    uint64_t                    u64_lcl_browse_page_to_initalize;
-    struct s_block_container    *ptr_stc_lcl_new_block_container;
-    struct s_block              *ptr_stc_new_block_to_init;
+    struct s_block  *ptr_stc_lcl_new_block;
+    struct s_block  *ptr_stc_lcl_previous_new_block;
+    uint64_t        u64_lcl_browse_to_init;
+    uint64_t        u64_lcl_size_assigned_to_structure;
 
-    u64_lcl_size_of_page = ZERO;
-    u64_lcl_browse_page_to_initalize = ZERO;
-    ptr_stc_new_block_to_init = NULL;
-    ptr_stc_lcl_new_block_container = NULL;
-
-    /**
-     *  We pass the required size to the nmap function or increase the old size 
-     *  by the size of one page
-     */
-    if (ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc != NULL)
+    ptr_stc_lcl_new_block = NULL;
+    ptr_stc_lcl_previous_new_block = NULL;
+    u64_lcl_browse_to_init = ZERO;
+    ptr_stc_lcl_new_block                   = (struct s_block*)&((uint8_t*)ptr_pssd_new_page)[Fu64__align16(sizeof(struct s_page) + Fu64__align16(sizeof(struct s_block)) + Fu64__align16(ptr_pssd_new_page->u64_block_size_)* u64_lcl_browse_to_init)];
+    u64_lcl_size_assigned_to_structure = ptr_pssd_new_page->u64_block_size_;
+    while (u64_lcl_browse_to_init < ptr_pssd_new_page->u64_number_of_used_blocks_in_page_)
     {
-    u64_lcl_size_of_page = Fu64__get_default_page_size_for_page_double_pointer_block_container(ptr_pssd_manipulation_structure, ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer + u64_pssd_number_of_pointers_for_double_pointer);
-    }
-    else
-    {
-    u64_lcl_size_of_page    = Fu64__get_default_page_size_for_page_double_pointer_block_container(ptr_pssd_manipulation_structure, u64_pssd_number_of_pointers_for_double_pointer);
-    }
-
-    /**
-     *  Call nmap and check if it returns NULL
-     */
-    if (NULL == (ptr_stc_lcl_new_block_container = Fptr_void__nmap(u64_lcl_size_of_page)))
-    {
-        return FAILURE;
+        u64_lcl_browse_to_init                  = u64_lcl_browse_to_init + 1;
+        if (u64_lcl_browse_to_init == ptr_pssd_new_page->u64_number_of_used_blocks_in_page_)
+        {
+            u64_lcl_size_assigned_to_structure      = ptr_pssd_new_page->u64_size_ - (((void*)ptr_stc_lcl_new_block - (void*)ptr_pssd_new_page));
+        }
+        Fptr_stc_init_memory_block(&ptr_stc_lcl_new_block, ptr_pssd_new_page, u64_lcl_size_assigned_to_structure, ptr_stc_lcl_previous_new_block);
+        ptr_stc_lcl_previous_new_block          = ptr_stc_lcl_new_block;
+        if (u64_lcl_browse_to_init != ptr_pssd_new_page->u64_number_of_used_blocks_in_page_)
+            ptr_stc_lcl_new_block                   = (struct s_block*)&((uint8_t*)ptr_stc_lcl_new_block)[Fu64__align16(sizeof(struct s_block)) + Fu64__align16(ptr_pssd_new_page->u64_block_size_)];
     }
 
-    /**
-     *  If we are re-allocating a page ; we should copy the old page
-     */
-    if (ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc != NULL)
-    {
-    memcpy(ptr_stc_lcl_new_block_container, ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc, Fu64__get_default_page_size_for_page_double_pointer_block_container(ptr_pssd_manipulation_structure, ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer));
-    u64_lcl_browse_page_to_initalize = ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer;
-    }
-    /**
-     *  Save the newly created block
-     */
-    ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc = (struct s_block_container*)(ptr_stc_lcl_new_block_container);
-
-    /**
-     *  Save the number of elements in the newly created block
-     */
-    ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer = Fu64__get_number_of_structure_in_default_page_size(u64_lcl_size_of_page - (sizeof(struct s_block_container) + sizeof(struct s_block **)), sizeof(struct s_block*));
-
-    fprintf(stderr, "Size of page is %20llu, maximum size should be %20llu, is %20llu\n", u64_lcl_size_of_page, ((uint64_t)465 * sizeof(struct s_block *)),ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer * (uint64_t)sizeof(struct s_block *));
-    fprintf(stderr, "The beginning of the new structure has been set %20llu from beginning of structure pointer\n", (uint64_t)sizeof(struct s_block_container) - sizeof(struct s_block  **));
-    /**
-     *  Initialize the new pointers by setting them to NULL
-     */
-    ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->ptr_stc_block_container = (struct s_block  **)((uint8_t*)&(ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc[sizeof(struct s_block_container) - sizeof(struct s_block  **)]));
-    while (u64_lcl_browse_page_to_initalize < ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer)
-    {
-        fprintf(stderr, "Here at %20llu, size of pointer is %20llu %20llu from beginning\n", u64_lcl_browse_page_to_initalize, ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->u64_size_of_double_pointer, u64_lcl_browse_page_to_initalize * sizeof(struct s_block*) + (sizeof(struct s_block_container) + sizeof(struct s_block **)));
-        ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc->ptr_stc_block_container[u64_lcl_browse_page_to_initalize] = NULL;
-        u64_lcl_browse_page_to_initalize = u64_lcl_browse_page_to_initalize + 1;
-    }
-
-    return SUCCESS;
+    ptr_pssd_new_page->ptr_first_free_block_ = ptr_stc_lcl_new_block;
+    return (ptr_pssd_new_page);
 }
 
-struct s_manipulation *Fptr_stc_manipulation__init_manipulation(struct s_manipulation *ptr_pssd_manipulation_structure)
+struct s_page *Fu8__create_and_init_new_page_category(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_required_size, uint64_t u64_pssd_number_of_elements)
 {
-    uint64_t                u64_lcl_minimum_initialization_size;
+    uint64_t        u64_lcl_minimum_initialization_size;
+    uint64_t        u64_lcl_number_of_structures_for_asked_size;
+    struct s_page   *ptr_lcl_stc_new_page;
 
-    u64_lcl_minimum_initialization_size                             = ZERO;
-    ptr_pssd_manipulation_structure->u64_pagesize                   = getpagesize();
-    ptr_pssd_manipulation_structure->ptr_stc_tiny_block_container   = NULL;
-    ptr_pssd_manipulation_structure->ptr_stc_small_block_container  = NULL;
-    ptr_pssd_manipulation_structure->ptr_stc_large_block_container  = NULL;
-    ptr_pssd_manipulation_structure->ptr_stc_page_linked_list       = NULL;
+    u64_lcl_minimum_initialization_size         = ZERO;
+    u64_lcl_number_of_structures_for_asked_size = ZERO;
+    u64_lcl_minimum_initialization_size         = Fu64__get_default_page_size_for_page_block_container(ptr_pssd_stc_manipulation_structure, u64_pssd_required_size, u64_pssd_number_of_elements); 
+    u64_lcl_number_of_structures_for_asked_size = Fu64__get_number_of_structure_in_asked_page_size(u64_lcl_minimum_initialization_size, u64_pssd_required_size);
 
-    Fu8__alloc_realloc_block_container(ptr_pssd_manipulation_structure, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS);
-    ptr_pssd_manipulation_structure->ptr_stc_tiny_block_container = ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc;
-    ptr_pssd_manipulation_structure->ptr_stc_container_to_alloc_realloc = NULL;
-    return (ptr_pssd_manipulation_structure);
+    ptr_lcl_stc_new_page                        = Fptr_void__nmap(u64_lcl_minimum_initialization_size);
+    if (NULL == (ptr_lcl_stc_new_page = Fptr_void__nmap(u64_lcl_minimum_initialization_size)))
+    {
+        return NULL;
+    }
+    ptr_lcl_stc_new_page->u64_size_                             = u64_lcl_minimum_initialization_size;
+    ptr_lcl_stc_new_page->u64_block_size_                       = u64_pssd_required_size; 
+    ptr_lcl_stc_new_page->u64_number_of_used_blocks_in_page_    = u64_lcl_number_of_structures_for_asked_size;
+    ptr_lcl_stc_new_page->ptr_first_free_block_                 = NULL;
+    ptr_lcl_stc_new_page->ptr_next_page_same_category_          = NULL;
+    ptr_lcl_stc_new_page->ptr_next_page_upper_category_         = NULL;
+    return (Fptr_stc_init_blocks_in_page(ptr_lcl_stc_new_page));
+}
+
+struct s_manipulation *Fptr_stc_manipulation__init_manipulation(struct s_manipulation *ptr_pssd_stc_manipulation_structure)
+{
+    ptr_pssd_stc_manipulation_structure->u64_pagesize                   = getpagesize();
+    ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list       = NULL;
+
+    if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list                                   = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, TINY, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
+    {
+        if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list->ptr_next_page_upper_category_    = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, SMALL, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
+        {
+        return (ptr_pssd_stc_manipulation_structure);
+        }
+    }
+    return (NULL);
 }
 
 struct s_manipulation *Fptr_stc_manipulation__create_manipulation_structure(void)
