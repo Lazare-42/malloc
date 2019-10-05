@@ -101,9 +101,9 @@ struct s_manipulation *Fptr_stc_manipulation__init_manipulation(struct s_manipul
     ptr_pssd_stc_manipulation_structure->u64_pagesize                   = getpagesize();
     ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list       = NULL;
 
-    if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list                                   = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, TINY, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
+    if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, TINY, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
     {
-        if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list->ptr_next_page_upper_category_    = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, SMALL, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
+        if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list->ptr_next_page_upper_category_ = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, SMALL, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
         {
         return (ptr_pssd_stc_manipulation_structure);
         }
@@ -122,9 +122,9 @@ struct s_manipulation *Fptr_stc_manipulation__create_manipulation_structure(void
     {
     u64_lcl_required_number_of_pages_for_manipulation_structure++;
     }
-    if (NULL == (ptr_stc_lcl_manipulation_structure = Fptr_void__nmap(u64_lcl_required_number_of_pages_for_manipulation_structure * getpagesize())))
+    if (NULL != (ptr_stc_lcl_manipulation_structure = Fptr_void__nmap(u64_lcl_required_number_of_pages_for_manipulation_structure * getpagesize())))
     {
-        return NULL;
+        return (Fptr_stc_manipulation__init_manipulation(ptr_stc_lcl_manipulation_structure));
     }
-    return (Fptr_stc_manipulation__init_manipulation(ptr_stc_lcl_manipulation_structure));
+    return NULL;
 }

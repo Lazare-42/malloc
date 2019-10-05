@@ -10,11 +10,12 @@ int main()
 {
 
     char    *test;
-    char test_string[256] = "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssso";
+    char test_string[128] = "iiiiiisssssssssssssssssssssssssssssssssssssssssssssssosssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssso\0";
     unsigned int i = 0;
     unsigned int z = 0;
 
     test = NULL;
+    fprintf(stderr, "%lu is length of test string\n", strlen(test_string));
     while (z < 100000)
     {
         fprintf(stderr, "Starting malloc number %d\n", z);

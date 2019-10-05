@@ -14,7 +14,6 @@ uint64_t Fu64_get_upper_page_size_for_requested_size(struct s_manipulation *ptr_
     - (float)((float)(u64_pssd_requested_size)
     / (float)ptr_pssd_manipulation_structure->u64_pagesize))
     * (float)ptr_pssd_manipulation_structure->u64_pagesize;
-    fprintf(stderr, "coucou, requested page size is %llu\n", u64_pssd_requested_size + u64_lcl_upper_page_size);
     return (u64_lcl_upper_page_size + u64_pssd_requested_size);
 }
 
