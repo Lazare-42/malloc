@@ -24,7 +24,7 @@ uint64_t Fu64__get_default_page_size_for_page_block_container(struct s_manipulat
     u64_lcl_requested_size  = ZERO;
 
     u64_lcl_requested_size = Fu64__align16(sizeof(struct s_page))
-    + u64_pssd_number_of_elements 
+    + (u64_pssd_number_of_elements != ZERO ? u64_pssd_number_of_elements : 1)
     * (Fu64__align16(sizeof(struct s_block)) +  Fu64__align16(u64_pssd_block_size));
 
     return (Fu64_get_upper_page_size_for_requested_size(ptr_pssd_manipulation_structure, u64_lcl_requested_size));
