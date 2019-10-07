@@ -13,7 +13,7 @@
 # define TRUE   (1)
 
 # define TINY (128)
-# define SMALL (512)
+# define SMALL (256)
 # define MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS (100)
 
 # define FIRST_BIT      (0x01)
@@ -28,8 +28,6 @@
 /**
  *  Used structures
  */
-
-
 struct s_node_pointer_container {
     void                *ptr_address_;
     void                *ptr_node_left_;
@@ -52,40 +50,25 @@ struct s_page {
     struct s_page       *ptr_next_page_upper_category_;
 };
 
-
 struct s_manipulation
 {
     uint64_t            u64_pagesize;
     struct s_page       *ptr_stc_page_linked_list;
 };
 
-//    struct s_block  **ptr_stc_block_tiny_blocks;
-//    uint64_t        u64_median_size_of_tiny_blocks;
-//    uint64_t        u64_size_of_tiny_memory_pointer; 
-//    uint64_t        u64_first_free_location_for_tiny_pointer; 
-//
-//    struct s_block  **ptr_stc_block_small_blocks;
-//    uint64_t        u64_median_size_of_small_blocks;
-//    uint64_t        u64_size_of_small_memory_pointer; 
-//    uint64_t        u64_first_free_location_for_small_pointer; 
-//
-//    struct s_block  **ptr_stc_block_large_blocks;
-//    uint64_t        u64_median_size_of_large_blocks;
-//    uint64_t        u64_size_of_large_memory_pointer; 
-//    uint64_t        u64_first_free_location_for_large_pointer; 
-//};
-
 /**
  * Function prototypes
  */
-void    *my_malloc(size_t size);
-void    *Fptr_void__allocate_fresh_memory_pages(size_t szt_pssd_page_number_to_allocate);
-struct s_manipulation *Fptr_stc_manipulation__create_manipulation_structure(void);
-uint64_t Fu64__align16(size_t number);
-uint64_t Fu64_get_upper_page_size_for_requested_size(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_requested_size);
-uint64_t Fu64__get_default_page_size_for_page_block_container(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_block_size, uint64_t u64_pssd_number_of_elements);
-uint64_t Fu64__get_number_of_structure_in_asked_page_size(uint64_t u64_pssd_asked_page_size, uint64_t u64_pssd_size_of_structure);
-struct s_page *Fu8__create_and_init_new_page_category(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_required_size, uint64_t u64_pssd_number_of_elements);
-void    *Fptr_void__return_memory(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_required_size);
+void                    *my_malloc(size_t size);
+void                    *Fptr_void__allocate_fresh_memory_pages(size_t szt_pssd_page_number_to_allocate);
+struct s_manipulation   *Fptr_stc_manipulation__create_manipulation_structure(void);
+uint64_t                Fu64__align16(size_t number);
+uint64_t                Fu64_get_upper_page_size_for_requested_size(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_requested_size);
+uint64_t                Fu64__get_default_page_size_for_page_block_container(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_block_size, uint64_t u64_pssd_number_of_elements);
+uint64_t                Fu64__get_number_of_structure_in_asked_page_size(uint64_t u64_pssd_asked_page_size, uint64_t u64_pssd_size_of_structure);
+struct s_page           *Fu8__create_and_init_new_page_category(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_required_size, uint64_t u64_pssd_number_of_elements);
+void                    *Fptr_void__return_memory(struct s_manipulation *ptr_pssd_stc_manipulation_structure, uint64_t u64_pssd_required_size);
+
+void my_free(void *ptr);
 
 #endif

@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include "malloc.h"
+#include <sys/mman.h>
+
+static struct s_manipulation    *ptr_stc_lcl_manipulation_structure = NULL;
 
 uint64_t Fu64__align16(size_t number)
 {
@@ -8,8 +11,7 @@ uint64_t Fu64__align16(size_t number)
 
 uint8_t  Fu8_bool__check_if_chosen_page_size_too_big_for_required_size(uint64_t u64_next_page_size, uint64_t u64_pssd_required_size)
 {
-    fprintf(stderr, "Checking if chosen page size too big. Next page size is %20llu, required size %20llu and multiple is %20llu\n", u64_next_page_size, u64_pssd_required_size, (uint64_t)(u64_pssd_required_size << 1));
-    if (u64_next_page_size > (u64_pssd_required_size << 1))
+    if (u64_next_page_size > (u64_pssd_required_size << 1) && u64_pssd_required_size > TINY)
     {
         return ((uint8_t)1);
     }
@@ -26,7 +28,6 @@ uint64_t Fu64__return_lower_page_size(uint64_t u64_pssd_next_page_size, uint64_t
     {
     u64_lcl_new_page_size = u64_lcl_new_page_size >> 1;
     }
-    fprintf(stderr, "Starting from next page size %20llu, required size %20llu, found new page size %20llu", u64_pssd_next_page_size, u64_pssd_required_size, u64_lcl_new_page_size);
     return (u64_lcl_new_page_size);
 }
 
@@ -66,9 +67,6 @@ struct s_page *Fptr_page__return_corresponding_page_category(struct s_manipulati
 
     ptr_stc_lcl_browse_page_category        = NULL;
     ptr_stc_lcl_previously_browsed_page     = NULL;
-    /**
-     *  Find page of required size
-     */
     ptr_stc_lcl_browse_page_category       = ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list;
     while (ptr_stc_lcl_browse_page_category != NULL && u64_pssd_required_size > ptr_stc_lcl_browse_page_category->u64_block_size_)
     {
@@ -149,7 +147,6 @@ void    *Fptr_void__return_memory(struct s_manipulation *ptr_pssd_stc_manipulati
 
 void    *my_malloc(size_t size)
 {
-    static struct s_manipulation    *ptr_stc_lcl_manipulation_structure = NULL;
 
     /**
      *  If the manipulation structure is set to NULL, initialize it.
@@ -163,4 +160,30 @@ void    *my_malloc(size_t size)
         }
     }
     return (Fptr_void__return_memory(ptr_stc_lcl_manipulation_structure, size));
+}
+
+void my_free(void *ptr)
+{
+    struct s_block  *ptr_stc_block_pointer_to_free;
+    struct s_page   *ptr_stc_page_storing_block_pointer;
+    uint64_t        u64_lcl_free_pages;
+
+    ptr_stc_block_pointer_to_free = NULL;
+    /**
+     *  Should first check if passed pointer belongs the all pointers.
+     */
+    if (ptr_stc_lcl_manipulation_structure == NULL)
+    {
+        return ;
+    }
+    ptr_stc_block_pointer_to_free                   = (struct s_block*)(((uint8_t*)(ptr)) - sizeof(struct s_block));
+    ptr_stc_block_pointer_to_free->u64_free_size_   = ptr_stc_block_pointer_to_free->u64_size_;
+    ptr_stc_page_storing_block_pointer              = ptr_stc_block_pointer_to_free->ptr_page_base_;
+
+    fprintf(stderr, "Free size in structure is %20llu, total size is %20llu, number of used blocks in page %20llu\n", ptr_stc_block_pointer_to_free->u64_free_size_, ptr_stc_block_pointer_to_free->u64_size_, ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_);
+    if (ptr_stc_lcl_manipulation_structure->u64_pagesize < ptr_stc_block_pointer_to_free->u64_size_)
+    {
+        fprintf(stderr, "Freeing\n");
+        munmap(ptr_stc_block_pointer_to_free, ptr_stc_block_pointer_to_free->u64_size_);
+    }
 }

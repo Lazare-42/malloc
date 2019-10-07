@@ -15,12 +15,16 @@ int main()
     unsigned int z = 0;
 
     test = NULL;
-    fprintf(stderr, "%lu is length of test string\n", strlen(test_string));
-    while (z < 100000)
+    //fprintf(stderr, "%lu is length of test string\n", strlen(test_string));
+    while (z < 1)
     {
-        fprintf(stderr, "Starting malloc number %d\n", z);
+        //fprintf(stderr, "Starting malloc number %d\n", z);
         i = 0;
-        test = my_malloc(strlen(test_string) + 1);
+        test = my_malloc(5000);
+        my_free(test);
+        test = my_malloc(2);
+        test = my_malloc(2);
+        my_free(test);
         if (test == NULL)
         {
             fprintf(stderr, "FAILURE NULL pointer received after malloc\n");
@@ -32,7 +36,7 @@ int main()
             i++;
         }
         test[i] = '\0';
-        printf("%s and %d strlen %zu\n", test, i, strlen(test_string));
+        //printf("%s and %d strlen %zu\n", test, i, strlen(test_string));
         z++;
      }
 

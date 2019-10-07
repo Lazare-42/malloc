@@ -1,7 +1,6 @@
 #include "malloc.h"
 #include <stdio.h>
 #include <sys/mman.h>
-#include <string.h>
 
 /**
  *  Allocates new memory by 
