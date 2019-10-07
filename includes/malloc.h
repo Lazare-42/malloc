@@ -45,7 +45,10 @@ struct s_page {
     uint64_t            u64_size_;
     uint64_t            u64_block_size_; 
     uint64_t            u64_number_of_used_blocks_in_page_;
+    uint64_t            u64_number_of_used_pages_in_category_;
+    uint64_t            u64_total_number_of_pages_in_category_;
     struct s_block      *ptr_first_free_block_;
+    struct s_page       *ptr_base_page_category_;
     struct s_page       *ptr_next_page_same_category_;
     struct s_page       *ptr_next_page_upper_category_;
 };

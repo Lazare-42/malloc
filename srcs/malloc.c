@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   malloc.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/07 18:01:52 by lazrossi          #+#    #+#             */
+/*   Updated: 2019/10/07 18:38:38 by lazrossi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include "malloc.h"
 #include <sys/mman.h>
@@ -113,10 +125,10 @@ struct s_page *Fptr_page__return_first_free_block_from_page_category(struct s_ma
         {
             return (NULL);
         }
+        ptr_stc_lcl_base_page_category->u64_total_number_of_pages_in_category_  += 1;
+        ptr_stc_lcl_base_page_category->u64_number_of_used_pages_in_category_   += 1;
     }
-    //ptr_pssd_stc_browse_page_category->ptr_base_page_category_ = ptr_stc_lcl_base_page_category;
-    //ptr_stc_lcl_base_page_category->u64_total_number_of_pages_in_category_ += 1;
-    //ptr_stc_lcl_base_page_category->u64_number_of_used_pages_in_category_  += 1;
+    ptr_pssd_stc_browse_page_category->ptr_base_page_category_              = ptr_stc_lcl_base_page_category;
     return (ptr_pssd_stc_browse_page_category);
 }
 
@@ -140,7 +152,6 @@ void    *Fptr_void__return_memory(struct s_manipulation *ptr_pssd_stc_manipulati
     ptr_stc_lcl_memory_block_to_return                      = ptr_stc_lcl_browse_page_category->ptr_first_free_block_;
     ptr_stc_lcl_browse_page_category->ptr_first_free_block_ = ptr_stc_lcl_browse_page_category->ptr_first_free_block_->ptr_next_;
     ptr_stc_lcl_memory_block_to_return->u64_free_size_      -= u64_pssd_required_size;
-    fprintf(stderr, "Returning a block of size %20llu, which is %20lu away from page base, page is of size %20llu\n",  ptr_stc_lcl_memory_block_to_return->u64_size_, (void*)(((uint8_t*)ptr_stc_lcl_memory_block_to_return) + Fu64__align16(sizeof(struct s_block))) - (void*)ptr_stc_lcl_browse_page_category, ptr_stc_lcl_browse_page_category->u64_size_);
     return ((void*)(((uint8_t*)ptr_stc_lcl_memory_block_to_return) + Fu64__align16(sizeof(struct s_block))));
 }
 
@@ -158,6 +169,37 @@ void    *my_malloc(size_t size)
         }
     }
     return (Fptr_void__return_memory(ptr_stc_lcl_manipulation_structure, size));
+}
+
+void Fvoid__free_half_of_used_pages_from_one_page_category(struct s_page *ptr_pssd_first_page_for_category)
+{
+    uint64_t        u64_lcl_number_of_pages_to_free;
+    struct s_page   *ptr_stc_lcl_page_to_browse;
+    struct s_page   *ptr_stc_lcl_page_before_last_browsed_elem;
+    struct s_page   *ptr_stc_lcl_page_to_free;
+
+    u64_lcl_number_of_pages_to_free             = ZERO;
+    ptr_stc_lcl_page_to_browse                  = ptr_pssd_first_page_for_category;
+    u64_lcl_number_of_pages_to_free             = (ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_ - ptr_pssd_first_page_for_category->u64_number_of_used_pages_in_category_) / 2;
+    fprintf(stderr, "Number of pages to free is %20llu, number of pages in category %20llu, number of used pages %20llu\n", u64_lcl_number_of_pages_to_free, ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_, ptr_pssd_first_page_for_category->u64_number_of_used_pages_in_category_);
+    while (u64_lcl_number_of_pages_to_free > ZERO && NULL != ptr_stc_lcl_page_to_browse)
+    {
+        if (ZERO == ptr_stc_lcl_page_to_browse->u64_number_of_used_blocks_in_page_ && ptr_stc_lcl_page_to_browse != ptr_pssd_first_page_for_category)
+        {
+            fprintf(stderr, "Deleting a page\n");
+            ptr_stc_lcl_page_before_last_browsed_elem->ptr_next_page_same_category_->ptr_next_page_same_category_ = ptr_stc_lcl_page_to_browse->ptr_next_page_same_category_;
+            ptr_stc_lcl_page_to_free = ptr_stc_lcl_page_to_browse;
+            ptr_stc_lcl_page_to_browse = ptr_stc_lcl_page_to_browse->ptr_next_page_same_category_;
+            munmap(ptr_stc_lcl_page_to_free, ptr_stc_lcl_page_to_browse->u64_size_);
+            ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_ -= 1;
+            u64_lcl_number_of_pages_to_free = u64_lcl_number_of_pages_to_free - 1;
+        }
+        else
+        {
+            ptr_stc_lcl_page_before_last_browsed_elem   = ptr_stc_lcl_page_to_browse;
+            ptr_stc_lcl_page_to_browse                  = ptr_stc_lcl_page_to_browse->ptr_next_page_same_category_;
+        }
+    }
 }
 
 void my_free(void *ptr)
@@ -179,14 +221,17 @@ void my_free(void *ptr)
     ptr_stc_block_pointer_to_free->u64_free_size_                           = ptr_stc_block_pointer_to_free->u64_size_;
     ptr_stc_page_storing_block_pointer                                      = ptr_stc_block_pointer_to_free->ptr_page_base_;
     ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_  = ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_ - 1;
-    if (ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_ == ZERO)
+    if (ZERO == ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_)
     {
+        ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_number_of_used_pages_in_category_ -= 1;
     }
-
-//    fprintf(stderr, "Free size in structure is %20llu, total size is %20llu, number of used blocks in page %20llu\n", ptr_stc_block_pointer_to_free->u64_free_size_, ptr_stc_block_pointer_to_free->u64_size_, ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_);
     if (ptr_stc_lcl_manipulation_structure->u64_pagesize < ptr_stc_block_pointer_to_free->u64_size_)
     {
-        fprintf(stderr, "Freeing\n");
         munmap(ptr_stc_block_pointer_to_free, ptr_stc_block_pointer_to_free->u64_size_);
+    }
+    else if ((ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_total_number_of_pages_in_category_ / 3 * 2) > ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_number_of_used_pages_in_category_)
+    {
+        //fprintf(stderr, "Decreasing used page category number ; now at : %20llu, with a total number of pages at %20llu\n", ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_number_of_used_pages_in_category_, ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_total_number_of_pages_in_category_);
+        Fvoid__free_half_of_used_pages_from_one_page_category(ptr_stc_page_storing_block_pointer->ptr_base_page_category_);
     }
 }

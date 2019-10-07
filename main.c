@@ -11,20 +11,20 @@ int main()
 
     char    *test;
     char test_string[128] = "iiiiiisssssssssssssssssssssssssssssssssssssssssssssssosssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssso\0";
+    char **test_container;
     unsigned int i = 0;
     unsigned int z = 0;
+    unsigned int f = 0;
 
     test = NULL;
+    f = 1000;
     //fprintf(stderr, "%lu is length of test string\n", strlen(test_string));
-    while (z < 1)
+    test_container = my_malloc(sizeof(char *) *f);
+    while (z < f)
     {
         //fprintf(stderr, "Starting malloc number %d\n", z);
         i = 0;
-        test = my_malloc(5000);
-        my_free(test);
-        test = my_malloc(2);
-        test = my_malloc(2);
-        my_free(test);
+        test = my_malloc(strlen(test_string));
         if (test == NULL)
         {
             fprintf(stderr, "FAILURE NULL pointer received after malloc\n");
@@ -37,8 +37,17 @@ int main()
         }
         test[i] = '\0';
         //printf("%s and %d strlen %zu\n", test, i, strlen(test_string));
+        test_container[z] = test;
         z++;
      }
+    z = 0;
+    while (z < f)
+    {
+        my_free(test_container[z]);
+        z++;
+    }
+    //my_free(test_container);
+
 
     return (SUCCESS);
 }
