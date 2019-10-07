@@ -32,5 +32,7 @@ uint64_t Fu64__get_default_page_size_for_page_block_container(struct s_manipulat
 
 uint64_t Fu64__get_number_of_structure_in_asked_page_size(uint64_t u64_pssd_asked_page_size, uint64_t u64_pssd_asked_malloc_size)
 {
+    fprintf(stderr, "Size of page is %20llu\n", Fu64__align16(sizeof(struct s_page)));
+    fprintf(stderr, "Number of elems in page is %20llu, size of one block with mem is %20llu, and block alone %20llu\n", (u64_pssd_asked_page_size - Fu64__align16(sizeof(struct s_page))) / ((Fu64__align16(sizeof(struct s_block)) +  Fu64__align16(u64_pssd_asked_malloc_size))), (uint64_t)(Fu64__align16(sizeof(struct s_block)) +  Fu64__align16(u64_pssd_asked_malloc_size)), Fu64__align16(sizeof(struct s_block)));
     return ((u64_pssd_asked_page_size - Fu64__align16(sizeof(struct s_page))) / (Fu64__align16(sizeof(struct s_block)) +  Fu64__align16(u64_pssd_asked_malloc_size)));
 }
