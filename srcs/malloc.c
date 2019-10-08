@@ -179,17 +179,20 @@ void Fvoid__free_half_of_used_pages_from_one_page_category(struct s_page *ptr_ps
     struct s_page   *ptr_stc_lcl_page_to_free;
 
     u64_lcl_number_of_pages_to_free             = ZERO;
-    ptr_stc_lcl_page_to_browse                  = ptr_pssd_first_page_for_category;
+    ptr_stc_lcl_page_before_last_browsed_elem   = ptr_pssd_first_page_for_category;
+    ptr_stc_lcl_page_to_browse                  = ptr_pssd_first_page_for_category->ptr_next_page_same_category_;
     u64_lcl_number_of_pages_to_free             = (ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_ - ptr_pssd_first_page_for_category->u64_number_of_used_pages_in_category_) / 2;
     fprintf(stderr, "Number of pages to free is %20llu, number of pages in category %20llu, number of used pages %20llu\n", u64_lcl_number_of_pages_to_free, ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_, ptr_pssd_first_page_for_category->u64_number_of_used_pages_in_category_);
     while (u64_lcl_number_of_pages_to_free > ZERO && NULL != ptr_stc_lcl_page_to_browse)
     {
-        if (ZERO == ptr_stc_lcl_page_to_browse->u64_number_of_used_blocks_in_page_ && ptr_stc_lcl_page_to_browse != ptr_pssd_first_page_for_category)
+        if (ZERO == ptr_stc_lcl_page_to_browse->u64_number_of_used_blocks_in_page_)
         {
-            fprintf(stderr, "Deleting a page\n");
-            ptr_stc_lcl_page_before_last_browsed_elem->ptr_next_page_same_category_->ptr_next_page_same_category_ = ptr_stc_lcl_page_to_browse->ptr_next_page_same_category_;
+            fprintf(stderr, "Freeing a page\n");
+            ptr_stc_lcl_page_before_last_browsed_elem->ptr_next_page_same_category_ = ptr_stc_lcl_page_to_browse->ptr_next_page_same_category_;
+
             ptr_stc_lcl_page_to_free = ptr_stc_lcl_page_to_browse;
             ptr_stc_lcl_page_to_browse = ptr_stc_lcl_page_to_browse->ptr_next_page_same_category_;
+
             munmap(ptr_stc_lcl_page_to_free, ptr_stc_lcl_page_to_browse->u64_size_);
             ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_ -= 1;
             u64_lcl_number_of_pages_to_free = u64_lcl_number_of_pages_to_free - 1;
