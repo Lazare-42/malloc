@@ -3,6 +3,7 @@ NAME = libmalloc.a
 SRCS = 	malloc.c \
 	   	nmap.c \
 		cal_page_size.c \
+		three_main_functions.c \
 		free.c \
 
 SRCS_DIR = ./srcs

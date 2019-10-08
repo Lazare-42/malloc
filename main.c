@@ -43,7 +43,9 @@ int main()
     z = 0;
     while (z < f)
     {
-        my_free(test_container[z]);
+        fprintf(stderr, "Reallocing from %lu to %lu\n", strlen(test_string), strlen(test_string) * 2);
+        test_container[z] = my_realloc(test_container[z], strlen(test_string) * 2);
+        fprintf(stderr, "%s\n", test_container[z]);
         z++;
     }
     //my_free(test_container);
