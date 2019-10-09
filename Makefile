@@ -63,4 +63,8 @@ fclean: clean
 	@-$(CLEAN) $(NAME)
 	@ make -C libft/ fclean 
 
+test: $(NAME) main.c
+	$(COMPILER) $(FLAGS) main.c -o test
+	./run.sh ./test
+
 re: fclean all
