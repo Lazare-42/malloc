@@ -37,11 +37,11 @@ all: mkbin $(NAME)
 mkbin:
 	@mkdir -p $(ODIR)
 
-libft/%: 
+$(LIBDIR): 
 	@[[ -d libft ]] || (echo Cloning [libft]... && git clone https://github.com/Lazare-42/libft &>/dev/null)
 	@make -C libft/
 
-$(NAME): $(OBJS) $(SELF)
+$(NAME): $(LIBDIR) $(OBJS) $(SELF)
 	@ $(COMPILER) $(FLAGS) $(LDFLAGS) -o $@ $(OBJS) -L$(LIBDIR) -lft
 	@ln -sf $(HOSTLIB) $(NAME)
 	@echo "\033[37;40mCompiled malloc library with the rules:\t" $(FLAGS) "\033[0m"
