@@ -2,6 +2,7 @@
 #include "malloc.h"
 #include <sys/mman.h>
 #include <string.h>
+#include "libft.h"
 
 static struct s_manipulation    *ptr_stc_global_static_manipulation_structure = NULL;
 

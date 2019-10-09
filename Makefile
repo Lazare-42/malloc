@@ -16,13 +16,15 @@ SRCS_DIR = ./srcs
 
 ODIR = ./bin
 
-LIBDIR = libft
+LIBDIR = ./libft
 
 OBJS = $(addprefix $(ODIR)/, $(SRCS:.c=.o))
 
 INCLUDES = ./includes/
 
-FLAGS = -Wextra -Werror -Wall -std=c99 -fno-stack-protector -fsanitize=address 
+INCLUDES_LIBFT = ./libft/includes/
+
+FLAGS = -Wextra -Werror -Wall -std=c99 -fsanitize=address 
 
 LDFLAGS = -shared
 
@@ -30,25 +32,27 @@ COMPILER = $$(command -v gcc)
 
 CLEAN = rm -rf $(ODIR)
 
-LIBFT = libft
+LIBFT = ./libft/libft.a
 
 all: mkbin $(NAME)
 
 mkbin:
 	@mkdir -p $(ODIR)
 
-$(LIBDIR): 
-	@[[ -d libft ]] || (echo Cloning [libft]... && git clone https://github.com/Lazare-42/libft &>/dev/null)
-	@make -C libft/
-
-$(NAME): $(LIBDIR) $(OBJS) $(SELF)
+$(NAME): $(LIBDIR) $(LIBFT) $(OBJS) $(SELF)
 	@ $(COMPILER) $(FLAGS) $(LDFLAGS) -o $@ $(OBJS) -L$(LIBDIR) -lft
 	@ln -sf $(HOSTLIB) $(NAME)
 	@echo "\033[37;40mCompiled malloc library with the rules:\t" $(FLAGS) "\033[0m"
 
-$(ODIR)/%.o: $(SRCS_DIR)/%.c $(INCLUDES) $(SELF) Makefile ./libft/libft.a 
+$(LIBDIR):  
+	@[[ -d libft ]] || (echo Cloning [libft]... && git clone https://github.com/Lazare-42/libft &>/dev/null)
+
+$(LIBFT):
+	@make -C libft/
+
+$(ODIR)/%.o: $(SRCS_DIR)/%.c $(INCLUDES) $(SELF) Makefile 
 	@ echo "\033[34;40mAssembling library object file:\t\t" $@ "\033[0m"
-	@ $(COMPILER) $(FLAGS) -c -o  $@ $< -I$(INCLUDES) 
+	@ $(COMPILER) $(FLAGS) -c -o  $@ $< -I$(INCLUDES) -I$(INCLUDES_LIBFT)
 
 clean: 
 	@ make -C libft/ clean 

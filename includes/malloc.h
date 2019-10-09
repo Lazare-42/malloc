@@ -3,7 +3,6 @@
 # define MALLOC_H
 #include <inttypes.h>
 #include <unistd.h>
-#include "../libft/includes/libft.h"
 
 # define FAILURE (1)
 # define SUCCESS (0)
