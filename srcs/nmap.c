@@ -35,10 +35,10 @@ void    Fptr_stc_init_memory_block(struct s_block
         uint64_t u64_pssd_size_of_memory_to_initialize, 
         struct s_block *ptr_pssd_next_block)
 {
-    (*ptr_pssd_memory_block_to_init)->u64_size_        = u64_pssd_size_of_memory_to_initialize;
-    (*ptr_pssd_memory_block_to_init)->u64_free_size_   = u64_pssd_size_of_memory_to_initialize;
-    (*ptr_pssd_memory_block_to_init)->ptr_next_        = ptr_pssd_next_block;
-    (*ptr_pssd_memory_block_to_init)->ptr_page_base_   = ptr_pssd_page_base;
+    (*ptr_pssd_memory_block_to_init)->u64_size_                 = u64_pssd_size_of_memory_to_initialize;
+    (*ptr_pssd_memory_block_to_init)->u64_free_size_            = u64_pssd_size_of_memory_to_initialize;
+    (*ptr_pssd_memory_block_to_init)->ptr_next_block_in_page_   = ptr_pssd_next_block;
+    (*ptr_pssd_memory_block_to_init)->ptr_page_base_            = ptr_pssd_page_base;
 }
 
 struct s_page       *Fptr_stc_init_blocks_in_page(struct s_page *ptr_pssd_new_page)
@@ -91,6 +91,7 @@ struct s_page *Fu8__create_and_init_new_page_category(struct s_manipulation *ptr
     ptr_lcl_stc_new_page->u64_total_number_of_pages_in_category_    = ZERO;
     ptr_lcl_stc_new_page->u64_number_of_used_pages_in_category_     = ZERO;
     ptr_lcl_stc_new_page->ptr_first_free_block_                     = NULL;
+    ptr_lcl_stc_new_page->ptr_first_occuppied_block_                = NULL;
     ptr_lcl_stc_new_page->ptr_next_page_same_category_              = NULL;
     ptr_lcl_stc_new_page->ptr_next_page_upper_category_             = NULL;
     return (Fptr_stc_init_blocks_in_page(ptr_lcl_stc_new_page));
@@ -98,8 +99,9 @@ struct s_page *Fu8__create_and_init_new_page_category(struct s_manipulation *ptr
 
 struct s_manipulation *Fptr_stc_manipulation__init_manipulation(struct s_manipulation *ptr_pssd_stc_manipulation_structure)
 {
-    ptr_pssd_stc_manipulation_structure->u64_pagesize                   = getpagesize();
-    ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list       = NULL;
+    ptr_pssd_stc_manipulation_structure->u64_pagesize                               = getpagesize();
+    ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list                   = NULL;
+    ptr_pssd_stc_manipulation_structure->ptr_stc_binary_tree_of_malloced_nodes_     = NULL;
 
     if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, TINY, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
     {

@@ -19,12 +19,12 @@ int main()
     test = NULL;
     f = 1000;
     //fprintf(stderr, "%lu is length of test string\n", strlen(test_string));
-    test_container = my_malloc(sizeof(char *) *f);
+    test_container = malloc(sizeof(char *) *f);
     while (z < f)
     {
         //fprintf(stderr, "Starting malloc number %d\n", z);
         i = 0;
-        test = my_malloc(strlen(test_string));
+        test = malloc(strlen(test_string));
         if (test == NULL)
         {
             fprintf(stderr, "FAILURE NULL pointer received after malloc\n");
@@ -35,7 +35,10 @@ int main()
             test[i] = test_string[i];
             i++;
         }
-        test[i] = '\0';
+        /**
+         *  This should segfault !!!
+         */
+        //test[i] = '\0';
         //printf("%s and %d strlen %zu\n", test, i, strlen(test_string));
         test_container[z] = test;
         z++;
@@ -43,12 +46,11 @@ int main()
     z = 0;
     while (z < f)
     {
-        fprintf(stderr, "Reallocing from %lu to %lu\n", strlen(test_string), strlen(test_string) * 2);
-        test_container[z] = my_realloc(test_container[z], strlen(test_string) * 2);
-        fprintf(stderr, "%s\n", test_container[z]);
+        //fprintf(stderr, "Reallocing from %lu to %lu\n", strlen(test_string), strlen(test_string) * 2);
+        test_container[z] = realloc(test_container[z], strlen(test_string) * 2);
         z++;
     }
-    //my_free(test_container);
+    //free(test_container);
 
 
     return (SUCCESS);

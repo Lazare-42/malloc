@@ -108,7 +108,10 @@ void    *Fptr_void__return_memory(struct s_manipulation *ptr_pssd_stc_manipulati
         return (NULL);
     }
     ptr_stc_lcl_memory_block_to_return                      = ptr_stc_lcl_browse_page_category->ptr_first_free_block_;
-    ptr_stc_lcl_browse_page_category->ptr_first_free_block_ = ptr_stc_lcl_browse_page_category->ptr_first_free_block_->ptr_next_;
+    ptr_stc_lcl_browse_page_category->ptr_first_free_block_ = ptr_stc_lcl_memory_block_to_return->ptr_next_block_in_page_;
+    ptr_stc_lcl_memory_block_to_return->ptr_next_block_in_page_ = ptr_stc_lcl_browse_page_category->ptr_first_occuppied_block_;
+    ptr_stc_lcl_browse_page_category->ptr_first_occuppied_block_ = ptr_stc_lcl_memory_block_to_return;
     ptr_stc_lcl_memory_block_to_return->u64_free_size_      -= u64_pssd_required_size;
     return ((void*)(((uint8_t*)ptr_stc_lcl_memory_block_to_return) + Fu64__align16(sizeof(struct s_block))));
 }
+
