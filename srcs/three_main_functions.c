@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "malloc.h"
 #include <sys/mman.h>
 #include <string.h>
@@ -43,8 +42,8 @@ void    *malloc(size_t size)
     /**
      *  If the manipulation structure is set to NULL, initialize it.
      */
-    printf("Coucou\n");
-        fprintf(stderr, "Coucou je suis la\n");
+    ft_printf("Coucou\n");
+        return (NULL);
     if (ptr_stc_global_static_manipulation_structure == NULL)
     {
         ptr_stc_global_static_manipulation_structure = Fptr_stc_manipulation__create_manipulation_structure();

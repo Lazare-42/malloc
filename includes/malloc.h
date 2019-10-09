@@ -65,6 +65,9 @@ struct s_manipulation
  * Function prototypes
  */
 void                    *malloc(size_t size);
+void                    free(void *ptr);
+void                    *realloc(void *ptr, size_t size);
+
 void                    *Fptr_void__allocate_fresh_memory_pages(size_t szt_pssd_page_number_to_allocate);
 struct s_manipulation   *Fptr_stc_manipulation__create_manipulation_structure(void);
 uint64_t                Fu64__align16(size_t number);
@@ -76,8 +79,6 @@ void                    *Fptr_void__return_memory(struct s_manipulation *ptr_pss
 uint8_t                 Fu8_bool__check_if_chosen_page_size_too_big_for_required_size(uint64_t u64_next_page_size, uint64_t u64_pssd_required_size);
 uint64_t                Fu64__return_upper_page_size(uint64_t u64_previous_page_size, uint64_t u64_pssd_required_size);
 
-void                    free(void *ptr);
 void                    Fvoid__free_half_of_used_pages_from_one_page_category(struct s_page *ptr_pssd_first_page_for_category);
-void                    *realloc(void *ptr, size_t size);
 
 #endif
