@@ -12,6 +12,7 @@ bin/*
 .DS_Store
 
 # executables / library
+test
 a.out
 *.a
 *.so
