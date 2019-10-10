@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include "malloc.h"
 #include <sys/mman.h>
+#include "libft.h"
 
 struct s_page *Fu8__add_upper_page_category_or_extend_current_page_category(struct s_manipulation *ptr_pssd_stc_manipulation_structure, struct s_page *ptr_pssd_stc_last_page, uint64_t u64_pssd_required_size)
 {
@@ -112,6 +113,7 @@ void    *Fptr_void__return_memory(struct s_manipulation *ptr_pssd_stc_manipulati
     ptr_stc_lcl_memory_block_to_return->ptr_next_block_in_page_ = ptr_stc_lcl_browse_page_category->ptr_first_occuppied_block_;
     ptr_stc_lcl_browse_page_category->ptr_first_occuppied_block_ = ptr_stc_lcl_memory_block_to_return;
     ptr_stc_lcl_memory_block_to_return->u64_free_size_      -= u64_pssd_required_size;
+    ft_printf("Returning pointer %p from malloc\n", (void*)(((uint8_t*)ptr_stc_lcl_memory_block_to_return) + Fu64__align16(sizeof(struct s_block))));
     return ((void*)(((uint8_t*)ptr_stc_lcl_memory_block_to_return) + Fu64__align16(sizeof(struct s_block))));
 }
 
