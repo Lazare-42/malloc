@@ -24,7 +24,7 @@ INCLUDES = ./includes/
 
 INCLUDES_LIBFT = ./libft/includes/
 
-FLAGS = -Wextra -Werror -Wall -std=c99 -fsanitize=address 
+FLAGS = -fPIC -Wextra -Werror -Wall -std=c99 #-fsanitize=address 
 
 LDFLAGS = -shared -exported_symbols_list symbol_list
 
@@ -64,8 +64,8 @@ fclean: clean
 	@ make -C libft/ fclean 
 
 test: $(NAME) main.c
-	$(COMPILER) $(FLAGS) main.c -o test
-	./run.sh ./test
+	@$(COMPILER) $(FLAGS) main.c -o test 
+	@./run.sh ./test
 re: fclean all
 
 .PHONY: all
