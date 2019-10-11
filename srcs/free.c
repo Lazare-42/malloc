@@ -15,7 +15,6 @@ uint8_t Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(struct s
     ptr_stc_lcl_page_category_to_browse         = ptr_pssd_manipulation_structure->ptr_stc_page_linked_list;
     while (NULL != ptr_stc_lcl_page_category_to_browse)
     {
-        ft_printf("[[green]]Browsing pages from free function...[[end]]\n");
         ptr_stc_lcl_page_inside_category_to_browse = ptr_stc_lcl_page_category_to_browse;
         while (NULL != ptr_stc_lcl_page_inside_category_to_browse)
         {
@@ -57,7 +56,6 @@ void Fvoid__free_half_of_used_pages_from_one_page_category(struct s_page *ptr_ps
     ptr_stc_lcl_page_before_last_browsed_elem   = ptr_pssd_first_page_for_category;
     ptr_stc_lcl_page_to_browse                  = ptr_pssd_first_page_for_category->ptr_next_page_same_category_;
     u64_lcl_number_of_pages_to_free             = (ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_ - ptr_pssd_first_page_for_category->u64_number_of_used_pages_in_category_) / 2;
-    ft_printf("Number of pages to free is %20llu, number of pages in category %20llu, number of used pages %20llu\n", u64_lcl_number_of_pages_to_free, ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_, ptr_pssd_first_page_for_category->u64_number_of_used_pages_in_category_);
     while (u64_lcl_number_of_pages_to_free > ZERO && NULL != ptr_stc_lcl_page_to_browse)
     {
         if (ZERO == ptr_stc_lcl_page_to_browse->u64_number_of_used_blocks_in_page_)

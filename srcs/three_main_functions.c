@@ -17,10 +17,9 @@ void free(void *ptr)
      */
     if (ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(ptr_stc_global_static_manipulation_structure, ptr))
     {
-        ft_printf("[[red]]Rejecting free because pointer was not previously allocated[[end]]\n");
+//        ft_printf("[[red]]Rejecting free because pointer was not [[bold]]previously[[end]] [[red]]allocated[[end]]\n");
         return ;
     }
-    ft_printf("Entering free\n");
     ptr_stc_block_pointer_to_free                                           = (struct s_block*)(((uint8_t*)(ptr)) - sizeof(struct s_block));
     ptr_stc_block_pointer_to_free->u64_free_size_                           = ptr_stc_block_pointer_to_free->u64_size_;
     ptr_stc_page_storing_block_pointer                                      = ptr_stc_block_pointer_to_free->ptr_page_base_;
@@ -63,10 +62,8 @@ void *realloc(void *ptr, size_t size)
     ptr_stc_lcl_block_pointer_to_realloc = NULL;
     if (ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(ptr_stc_global_static_manipulation_structure, ptr))
     {
-        ft_printf("[[red]]Redirecting call to realloc to malloc() because pointer %p because pointer was not previously allocated[[end]]\n", ptr);
         return (malloc(size));
     }
-    ft_printf("Entering realloc\n");
     ptr_stc_lcl_block_pointer_to_realloc = (struct s_block*)(((uint8_t*)(ptr)) - sizeof(struct s_block));
     if (ptr_stc_lcl_block_pointer_to_realloc->u64_size_ < size)
     {
