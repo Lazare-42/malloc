@@ -103,9 +103,9 @@ struct s_manipulation *Fptr_stc_manipulation__init_manipulation(struct s_manipul
     ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list                   = NULL;
     ptr_pssd_stc_manipulation_structure->ptr_stc_binary_tree_of_malloced_nodes_     = NULL;
 
-    if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, TINY, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
+    if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, TINY, MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS)))
     {
-        if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list->ptr_next_page_upper_category_ = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, SMALL, MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS)))
+        if (NULL != (ptr_pssd_stc_manipulation_structure->ptr_stc_page_linked_list->ptr_next_page_upper_category_ = Fu8__create_and_init_new_page_category(ptr_pssd_stc_manipulation_structure, SMALL, MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS)))
         {
         return (ptr_pssd_stc_manipulation_structure);
         }

@@ -14,7 +14,7 @@
 
 # define TINY (128)
 # define SMALL (256)
-# define MINIMUM_NUMBER_OF_TINY_SMALL_ALLOCATIONS (100)
+# define MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS (100)
 
 # define FIRST_BIT      (0x01)
 # define SECOND_BIT     (0x02)
