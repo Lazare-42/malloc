@@ -1,0 +1,27 @@
+digraph malloc_data_structure {
+
+    graph [bgcolor="#f5f5dc"]
+    direction="vertical"
+    rankdir=LR;
+
+    subgraph cluster_page{
+	    style="dotted"
+        label="Page Organisation"
+        tiny_user_request_1;
+        small_user_request_1;
+    }
+
+    subgraph cluster_page_size{
+		rank=same
+    	constraint=true
+	    style="dotted"
+        label="User asked size"
+        MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS_TINY 
+        MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS_SMALL 
+        size_N 
+        size_superior_to_get_page_size
+    }
+
+    MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS_TINY -> tiny_user_request_1;
+    MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS_SMALL -> small_user_request_1;
+}
