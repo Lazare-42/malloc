@@ -3,7 +3,7 @@
 #include <string.h>
 #include "libft.h"
 
-static struct s_manipulation    *ptr_stc_global_static_manipulation_structure = NULL;
+static struct s_manipulation    *g_ptr_stc_global_static_manipulation_structure = NULL;
 
 void free(void *ptr)
 {
@@ -15,7 +15,7 @@ void free(void *ptr)
     /**
      *  Should first check if passed pointer belongs the all pointers.
      */
-    if (ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(ptr_stc_global_static_manipulation_structure, ptr))
+    if (g_ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(g_ptr_stc_global_static_manipulation_structure, ptr))
     {
 //        ft_printf("[[red]]Rejecting free because pointer was not [[bold]]previously[[end]] [[red]]allocated[[end]]\n");
         return ;
@@ -28,7 +28,7 @@ void free(void *ptr)
     {
         ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_number_of_used_pages_in_category_ -= 1;
     }
-    if (ptr_stc_global_static_manipulation_structure->u64_pagesize < ptr_stc_block_pointer_to_free->u64_size_)
+    if (g_ptr_stc_global_static_manipulation_structure->u64_pagesize < ptr_stc_block_pointer_to_free->u64_size_)
     {
         munmap(ptr_stc_block_pointer_to_free, ptr_stc_block_pointer_to_free->u64_size_);
     }
@@ -43,15 +43,15 @@ void    *malloc(size_t size)
     /**
      *  If the manipulation structure is set to NULL, initialize it.
      */
-    if (ptr_stc_global_static_manipulation_structure == NULL)
+    if (g_ptr_stc_global_static_manipulation_structure == NULL)
     {
-        ptr_stc_global_static_manipulation_structure = Fptr_stc_manipulation__create_manipulation_structure();
-        if (ptr_stc_global_static_manipulation_structure  == NULL)
+        g_ptr_stc_global_static_manipulation_structure = Fptr_stc_manipulation__create_manipulation_structure();
+        if (g_ptr_stc_global_static_manipulation_structure  == NULL)
         {
             return NULL;
         }
     }
-    return (Fptr_void__return_memory(ptr_stc_global_static_manipulation_structure, size));
+    return (Fptr_void__return_memory(g_ptr_stc_global_static_manipulation_structure, size));
 }
 
 void *realloc(void *ptr, size_t size)
@@ -60,7 +60,7 @@ void *realloc(void *ptr, size_t size)
     void            *ptr_void_lcl_realloced_memory;
 
     ptr_stc_lcl_block_pointer_to_realloc = NULL;
-    if (ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(ptr_stc_global_static_manipulation_structure, ptr))
+    if (g_ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(g_ptr_stc_global_static_manipulation_structure, ptr))
     {
         return (malloc(size));
     }
@@ -86,5 +86,5 @@ void *calloc(size_t elemn, size_t size)
 
 void show_alloc_mem()
 {
-    print_alloc_memory(ptr_stc_global_static_manipulation_structure);
+    print_alloc_memory(g_ptr_stc_global_static_manipulation_structure);
 }
