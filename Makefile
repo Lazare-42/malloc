@@ -11,6 +11,7 @@ SRCS = 	malloc.c \
 		cal_page_size.c \
 		three_main_functions.c \
 		free.c \
+		show_alloc_mem.c \
 
 SRCS_DIR = ./srcs
 
@@ -64,7 +65,7 @@ fclean: clean
 	@ make -C libft/ fclean 
 
 test: $(NAME) main.c
-	@$(COMPILER) $(FLAGS) main.c -o test 
+	@$(COMPILER) $(FLAGS) main.c -o test -L. -lft_malloc
 	@./run.sh ./test
 re: fclean all
 

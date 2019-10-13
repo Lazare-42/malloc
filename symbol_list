@@ -1,3 +1,4 @@
 _free
 _malloc
 _realloc
+_show_alloc_mem

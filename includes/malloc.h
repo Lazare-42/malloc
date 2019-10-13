@@ -80,6 +80,8 @@ uint8_t                 Fu8_bool__check_if_chosen_page_size_too_big_for_required
 uint64_t                Fu64__return_upper_page_size(uint64_t u64_previous_page_size, uint64_t u64_pssd_required_size);
 
 void                    Fvoid__free_half_of_used_pages_from_one_page_category(struct s_page *ptr_pssd_first_page_for_category);
-uint8_t Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(struct s_manipulation *ptr_pssd_manipulation_structure, void *ptr_pssd_pointer_passed_to_free);
+uint8_t                 Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(struct s_manipulation *ptr_pssd_manipulation_structure, void *ptr_pssd_pointer_passed_to_free);
+void                    print_alloc_memory(struct s_manipulation *ptr_pssd_manipulation_structure);
+void                    show_alloc_mem();
 
 #endif

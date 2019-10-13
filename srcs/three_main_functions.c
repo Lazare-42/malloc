@@ -83,3 +83,8 @@ void *calloc(size_t elemn, size_t size)
     (void)size;
     return NULL;
 }
+
+void show_alloc_mem()
+{
+    print_alloc_memory(ptr_stc_global_static_manipulation_structure);
+}
