@@ -2,26 +2,173 @@ digraph malloc_data_structure {
 
     graph [bgcolor="#f5f5dc"]
     direction="vertical"
-    rankdir=LR;
+    rankdir=LR
 
     subgraph cluster_page{
 	    style="dotted"
         label="Page Organisation"
-        tiny_user_request_1;
-        small_user_request_1;
+        tiny_user_request_2
+        small_user_request_2
+        tiny_user_request_1:5 -> small_user_request_1   [constraint=false]
+        small_user_request_1:5 -> n                     [constraint=false]
+        n:5 -> m                                        [constraint=false]
+        m:5 -> o                                        [constraint=false]
     }
 
     subgraph cluster_page_size{
-		rank=same
     	constraint=true
 	    style="dotted"
-        label="User asked size"
-        MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS_TINY 
-        MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS_SMALL 
-        size_N 
-        size_superior_to_get_page_size
+        label="User size request"
+        TINY                        [label="< TINY"]
+        SMALL                       [label="< SMALL"]
+        N                           [label="< SMALL x 2"]
+        M                           [label="< SMALL x 2 ^ 2"]
+        O                           [label="..."]
+        superior_to_get_page_size   [label="> getpagesize()"]
     }
 
-    MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS_TINY -> tiny_user_request_1;
-    MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS_SMALL -> small_user_request_1;
+    TINY                    -> tiny_user_request_1    [style="dotted"]
+    tiny_user_request_1:4   -> tiny_user_request_2
+    tiny_user_request_1:2   -> block_tiny
+
+    SMALL                   -> small_user_request_1   [style="dotted"]
+    small_user_request_1:2   -> block_small
+    small_user_request_1:4  -> small_user_request_2
+
+    N                       -> n                      [style="dotted"]
+    n:2                     ->block_n
+
+    M                       -> m                      [style="dotted"]
+    m:2                     ->block_m
+
+    o:2                     -> block_o
+
+    small_user_request_1 [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_page</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL * MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS </td></tr>
+        <tr><td port="1" >u64_block_size_ : SMALL                                   </td></tr>
+        <tr><td port="2" >ptr_first_free_block_                                     </td></tr>
+        <tr><td port="3" >ptr_first_occuppied_block_                                </td></tr>
+        <tr><td port="4" >ptr_next_page_same_category_                              </td></tr>
+        <tr><td port="5" >ptr_next_page_upper_category_                             </td></tr>
+    </table>>
+    shape="plain"]
+
+    small_user_request_2 [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_page</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL * MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS </td></tr>
+        <tr><td port="1" >u64_block_size_ : SMALL                                   </td></tr>
+        <tr><td port="2" >ptr_first_free_block_                                     </td></tr>
+        <tr><td port="3" >ptr_first_occuppied_block_                                </td></tr>
+        <tr><td port="4" >ptr_next_page_same_category_                              </td></tr>
+        <tr><td port="5" >ptr_next_page_upper_category_                             </td></tr>
+    </table>>
+    shape="plain"]
+
+    tiny_user_request_1 [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_page </i></td></tr>
+        <tr><td port="0" >u64_size_ : TINY * MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS </td></tr>
+        <tr><td port="1" >u64_block_size_ : TINY                                   </td></tr>
+        <tr><td port="2" >ptr_first_free_block_                                     </td></tr>
+        <tr><td port="3" >ptr_first_occuppied_block_                                </td></tr>
+        <tr><td port="4" >ptr_next_page_same_category_                              </td></tr>
+        <tr><td port="5" >ptr_next_page_upper_category_                             </td></tr>
+    </table>>
+    shape="plain"]
+
+    tiny_user_request_2 [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_page </i></td></tr>
+        <tr><td port="0" >u64_size_ : TINY * MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS </td></tr>
+        <tr><td port="1" >u64_block_size_ : TINY                                   </td></tr>
+        <tr><td port="2" >ptr_first_free_block_                                     </td></tr>
+        <tr><td port="3" >ptr_first_occuppied_block_                                </td></tr>
+        <tr><td port="4" >ptr_next_page_same_category_                              </td></tr>
+        <tr><td port="5" >ptr_next_page_upper_category_                             </td></tr>
+    </table>>
+    shape="plain"]
+
+    n [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_page</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL * 2 * MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS </td></tr>
+        <tr><td port="1" >u64_block_size_ : SMALL x 2                               </td></tr>
+        <tr><td port="2" >ptr_first_free_block_                                     </td></tr>
+        <tr><td port="3" >ptr_first_occuppied_block_                                </td></tr>
+        <tr><td port="4" >ptr_next_page_same_category_                              </td></tr>
+        <tr><td port="5" >ptr_next_page_upper_category_                             </td></tr>
+    </table>>
+    shape="plain"]
+
+    m [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_page</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL * 4 * MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS </td></tr>
+        <tr><td port="1" >u64_block_size_ : SMALL x 2 ^ 2                           </td></tr>
+        <tr><td port="2" >ptr_first_free_block_                                     </td></tr>
+        <tr><td port="3" >ptr_first_occuppied_block_                                </td></tr>
+        <tr><td port="4" >ptr_next_page_same_category_                              </td></tr>
+        <tr><td port="5" >ptr_next_page_upper_category_                             </td></tr>
+    </table>>
+    shape="plain"]
+
+    o [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_page</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL * 8 * MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS </td></tr>
+        <tr><td port="1" >u64_block_size_ : getpagesize()                           </td></tr>
+        <tr><td port="2" >ptr_first_free_block_                                     </td></tr>
+        <tr><td port="3" >ptr_first_occuppied_block_                                </td></tr>
+        <tr><td port="4" >ptr_next_page_same_category_                              </td></tr>
+        <tr><td port="5" >ptr_next_page_upper_category_                             </td></tr>
+    </table>>
+    shape="plain"]
+
+    block_tiny [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_block</i></td></tr>
+        <tr><td port="0" >u64_size_ : TINY                                          </td></tr>
+        <tr><td port="1" >u64_free_size_                                            </td></tr>
+        <tr><td port="2" >ptr_next_block_in_page_                                   </td></tr>
+    </table>>
+    shape="plain"]
+
+    block_small [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_block</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL                                          </td></tr>
+        <tr><td port="1" >u64_free_size_                                             </td></tr>
+        <tr><td port="2" >ptr_next_block_in_page_                                    </td></tr>
+    </table>>
+    shape="plain"]
+
+    block_n [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_block</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL * 2                                         </td></tr>
+        <tr><td port="1" >u64_free_size_                                             </td></tr>
+        <tr><td port="2" >ptr_next_block_in_page_                                    </td></tr>
+    </table>>
+    shape="plain"]
+
+    block_m [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_block</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL * 4                                         </td></tr>
+        <tr><td port="1" >u64_free_size_                                             </td></tr>
+        <tr><td port="2" >ptr_next_block_in_page_                                    </td></tr>
+    </table>>
+    shape="plain"]
+
+    block_o [label=<
+    <table border="0" cellborder="1" cellspacing="0">
+        <tr><td><i>struct s_block</i></td></tr>
+        <tr><td port="0" >u64_size_ : SMALL * 8                                         </td></tr>
+        <tr><td port="1" >u64_free_size_                                             </td></tr>
+        <tr><td port="2" >ptr_next_block_in_page_                                    </td></tr>
+    </table>>
+    shape="plain"]
 }
