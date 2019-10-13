@@ -92,7 +92,7 @@ struct s_page *fu8__create_and_init_new_page_category(struct s_manipulation *ptr
     ptr_lcl_stc_new_page->u64_number_of_used_pages_in_category_     = ZERO;
     ptr_lcl_stc_new_page->ptr_first_free_block_                     = NULL;
     ptr_lcl_stc_new_page->ptr_first_occuppied_block_                = NULL;
-    ptr_lcl_stc_new_page->ptr_next_page_same_category_              = NULL;
+    ptr_lcl_stc_new_page->ptr_next_page_in_category_              = NULL;
     ptr_lcl_stc_new_page->ptr_next_page_upper_category_             = NULL;
     return (fptr_stc_init_blocks_in_page(ptr_lcl_stc_new_page));
 }

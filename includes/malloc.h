@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   malloc.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/13 12:06:30 by lazrossi          #+#    #+#             */
+/*   Updated: 2019/10/13 12:20:32 by lazrossi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MALLOC_H
 
 # define MALLOC_H
@@ -38,7 +50,7 @@ struct								s_page {
 	struct s_block					*ptr_first_free_block_;
 	struct s_block					*ptr_first_occuppied_block_;
 	struct s_page					*ptr_base_page_category_;
-	struct s_page					*ptr_next_page_same_category_;
+	struct s_page					*ptr_next_page_in_category_;
 	struct s_page					*ptr_next_page_upper_category_;
 };
 
