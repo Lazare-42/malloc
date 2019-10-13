@@ -1,0 +1,62 @@
+Norme: ./srcs/nmap.c
+Error: global scope bad aligned
+Error: 6 functions in the file
+Error: 42 header not at top of the file
+Error (line 5): spaces at the end of line
+Error (line 6): spaces at the end of line
+Error (line 8): line has 95 characters
+Error (line 11): line has 114 characters
+Error (line 14): line has 82 characters
+Error (line 18): bad spacing before fptr_void__nmap
+Error (line 23): spaces at the end of line
+Error (line 25): comment not well formatted
+Error (line 25): comment not well placed
+Error (line 32): spaces at the end of line
+Error (line 33): spaces at the end of line
+Error (line 34): spaces at the end of line
+Error (line 37): line has 105 characters
+Error (line 37, col 49): missing space around =
+Error (line 38): line has 105 characters
+Error (line 38, col 52): missing space around =
+Error (line 39): line has 87 characters
+Error (line 39, col 59): missing space around =
+Error (line 40): line has 86 characters
+Error (line 40, col 52): missing space around =
+Error (line 43): line has 84 characters
+Error (line 50, col 26): missing space around =
+Error (line 51, col 33): missing space around =
+Error (line 52, col 27): missing space around =
+Error (line 53): line has 129 characters
+Error (line 53, col 26): missing space around =
+Error (line 54, col 36): missing space around =
+Error (line 55): line has 91 characters
+Error (line 57, col 29): missing space around =
+Error (line 58): line has 93 characters
+Error (line 60): line has 186 characters
+Error (line 60, col 39): missing space around =
+Error (line 62): line has 147 characters
+Error (line 63, col 35): missing space around =
+Error (line 64): line has 93 characters
+Error (line 65): line has 198 characters
+Error (line 65, col 29): missing space around =
+Error (line 71): Space before function name
+Error (line 71): line has 185 characters
+Error (line 80): spaces at the end of line
+Error (line 80): line has 96 characters
+Error (line 81): spaces at the end of line
+Error (line 86, col 9): missing parentheses in return statement
+Error (line 88): spaces at the end of line
+Error (line 90, col 2): missing space around =
+Error (line 100): Space before function name
+Error (line 100): line has 124 characters
+Error (line 105, col 2): space before arrow
+Error (line 106): Empty line
+Error (line 108, col 2): missing space around =
+Error (line 113): spaces at the end of line
+Error (line 114, col 2): missing space around =
+Error (line 118): bad indentation
+Error (line 124): Space before function name
+Error (line 127): line has 89 characters
+Error (line 135): bad indentation
+Error (line 143): bad indentation
+Error (line 143, col 8): missing parentheses in return statement
