@@ -12,7 +12,7 @@ satisfy the request.
 The lists are themselves tied together using lists.
 
 The project architecture can be summarized as follows :
-(doc/my_malloc_architecture-1.png)
+[Project implementation](doc/my_malloc_architecture-1.png)
 
 
 ## Usage
