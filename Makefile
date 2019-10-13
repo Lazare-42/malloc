@@ -9,6 +9,7 @@ HOSTLIB = libft_malloc_$(HOSTTYPE).so
 SRCS = 	malloc.c \
 	   	nmap.c \
 		cal_page_size.c \
+		cal_page_size_2.c \
 		three_main_functions.c \
 		free.c \
 		show_alloc_mem.c \
@@ -41,9 +42,9 @@ mkbin:
 	@mkdir -p $(ODIR)
 
 $(NAME): $(LIBDIR) $(LIBFT) $(OBJS) $(SELF)
-	 $(COMPILER) $(FLAGS) $(LDFLAGS) -o $(HOSTLIB) $(OBJS) -L$(LIBDIR) -lft
-	ln -sf $(HOSTLIB) $(NAME)
-	echo "\033[37;40mCompiled malloc library with the rules:\t" $(FLAGS) "\033[0m"
+	@$(COMPILER) $(FLAGS) $(LDFLAGS) -o $(HOSTLIB) $(OBJS) -L$(LIBDIR) -lft
+	@ln -sf $(HOSTLIB) $(NAME)
+	@ echo "\033[37;40mCompiled malloc library with the rules:\t" $(FLAGS) "\033[0m"
 
 $(LIBDIR):  
 	@[[ -d libft ]] || (echo Cloning [libft]... && git clone https://github.com/Lazare-42/libft &>/dev/null)

@@ -1,5 +1,4 @@
 #include "malloc.h"
-#include <stdio.h>
 #include <sys/mman.h>
 
 /**
@@ -120,13 +119,17 @@ struct s_manipulation *fptr_stc_manipulation__create_manipulation(void)
 
     ptr_stc_lcl_manipulation_structure = NULL;
     u64_lcl_required_number_of_pages_for_manipulation_structure = 1;
-    while (fu64__align16(sizeof(struct s_manipulation)) > u64_lcl_required_number_of_pages_for_manipulation_structure * getpagesize())
+    while (fu64__align16(sizeof(struct s_manipulation))
+        > u64_lcl_required_number_of_pages_for_manipulation_structure
+        * getpagesize())
     {
     u64_lcl_required_number_of_pages_for_manipulation_structure++;
     }
-    if (NULL != (ptr_stc_lcl_manipulation_structure = fptr_void__nmap(u64_lcl_required_number_of_pages_for_manipulation_structure * getpagesize())))
-    {
-        return (fptr_stc_manipulation__init_manipulation(ptr_stc_lcl_manipulation_structure));
-    }
+    if (NULL != (ptr_stc_lcl_manipulation_structure =
+    fptr_void__nmap(u64_lcl_required_number_of_pages_for_manipulation_structure
+    * getpagesize())))
+        return (
+    fptr_stc_manipulation__init_manipulation(
+        ptr_stc_lcl_manipulation_structure));
     return NULL;
 }
