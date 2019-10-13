@@ -3,7 +3,7 @@
 
 void show_one_address(struct s_block *ptr_pssd_stc_block_to_show)
 {
-    ft_printf("%p - %p : %d bytes\n", (void*)(((uint8_t*)ptr_pssd_stc_block_to_show) + Fu64__align16(sizeof(struct s_block))), (void*)(((uint8_t*)ptr_pssd_stc_block_to_show) + Fu64__align16(sizeof(struct s_block))) + ptr_pssd_stc_block_to_show->u64_size_ - ptr_pssd_stc_block_to_show->u64_free_size_, ptr_pssd_stc_block_to_show->u64_size_ - ptr_pssd_stc_block_to_show->u64_free_size_);
+    ft_printf("%p - %p : %d bytes\n", (void*)(((uint8_t*)ptr_pssd_stc_block_to_show) + fu64__align16(sizeof(struct s_block))), (void*)(((uint8_t*)ptr_pssd_stc_block_to_show) + fu64__align16(sizeof(struct s_block))) + ptr_pssd_stc_block_to_show->u64_size_ - ptr_pssd_stc_block_to_show->u64_free_size_, ptr_pssd_stc_block_to_show->u64_size_ - ptr_pssd_stc_block_to_show->u64_free_size_);
 }
 
 void show_one_list_category(struct s_page *ptr_pssd_page_to_show)
@@ -13,11 +13,11 @@ void show_one_list_category(struct s_page *ptr_pssd_page_to_show)
     ptr_stc_lcl_browse_alloced_blocks = NULL;
     ptr_stc_lcl_browse_alloced_blocks = ptr_pssd_page_to_show->ptr_first_occuppied_block_;
     if (ptr_pssd_page_to_show->u64_block_size_ == TINY)
-        ft_printf("TINY : %p\n", (void*)(((uint8_t*)ptr_pssd_page_to_show) + Fu64__align16(sizeof(struct s_page))));
+        ft_printf("TINY : %p\n", (void*)(((uint8_t*)ptr_pssd_page_to_show) + fu64__align16(sizeof(struct s_page))));
     else if (ptr_pssd_page_to_show->u64_block_size_ == SMALL)
-        ft_printf("SMALL : %p\n", (void*)(((uint8_t*)ptr_pssd_page_to_show) + Fu64__align16(sizeof(struct s_page))));
+        ft_printf("SMALL : %p\n", (void*)(((uint8_t*)ptr_pssd_page_to_show) + fu64__align16(sizeof(struct s_page))));
     else
-        ft_printf("LARGE : %p, with a block size of %d bytes\n", (void*)(((uint8_t*)ptr_pssd_page_to_show) + Fu64__align16(sizeof(struct s_page))), ptr_pssd_page_to_show->u64_block_size_);
+        ft_printf("LARGE : %p, with a block size of %d bytes\n", (void*)(((uint8_t*)ptr_pssd_page_to_show) + fu64__align16(sizeof(struct s_page))), ptr_pssd_page_to_show->u64_block_size_);
     while (NULL != ptr_stc_lcl_browse_alloced_blocks)
     {
         show_one_address(ptr_stc_lcl_browse_alloced_blocks);

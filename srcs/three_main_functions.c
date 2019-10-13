@@ -15,7 +15,7 @@ void free(void *ptr)
     /**
      *  Should first check if passed pointer belongs the all pointers.
      */
-    if (g_ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(g_ptr_stc_global_static_manipulation_structure, ptr))
+    if (g_ptr_stc_global_static_manipulation_structure == NULL || ZERO == fu8__bool_check_if_malloced(g_ptr_stc_global_static_manipulation_structure, ptr))
     {
 //        ft_printf("[[red]]Rejecting free because pointer was not [[bold]]previously[[end]] [[red]]allocated[[end]]\n");
         return ;
@@ -34,7 +34,7 @@ void free(void *ptr)
     }
     else if ((ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_total_number_of_pages_in_category_ / 3 * 2) > ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_number_of_used_pages_in_category_)
     {
-        Fvoid__free_half_of_used_pages_from_one_page_category(ptr_stc_page_storing_block_pointer->ptr_base_page_category_);
+        fvoid__free_half_of_used_pages_from_one_page(ptr_stc_page_storing_block_pointer->ptr_base_page_category_);
     }
 }
 
@@ -45,13 +45,13 @@ void    *malloc(size_t size)
      */
     if (g_ptr_stc_global_static_manipulation_structure == NULL)
     {
-        g_ptr_stc_global_static_manipulation_structure = Fptr_stc_manipulation__create_manipulation_structure();
+        g_ptr_stc_global_static_manipulation_structure = fptr_stc_manipulation__create_manipulation();
         if (g_ptr_stc_global_static_manipulation_structure  == NULL)
         {
             return NULL;
         }
     }
-    return (Fptr_void__return_memory(g_ptr_stc_global_static_manipulation_structure, size));
+    return (fptr_void__return_memory(g_ptr_stc_global_static_manipulation_structure, size));
 }
 
 void *realloc(void *ptr, size_t size)
@@ -60,7 +60,7 @@ void *realloc(void *ptr, size_t size)
     void            *ptr_void_lcl_realloced_memory;
 
     ptr_stc_lcl_block_pointer_to_realloc = NULL;
-    if (g_ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(g_ptr_stc_global_static_manipulation_structure, ptr))
+    if (g_ptr_stc_global_static_manipulation_structure == NULL || ZERO == fu8__bool_check_if_malloced(g_ptr_stc_global_static_manipulation_structure, ptr))
     {
         return (malloc(size));
     }
@@ -68,12 +68,12 @@ void *realloc(void *ptr, size_t size)
     if (ptr_stc_lcl_block_pointer_to_realloc->u64_size_ < size)
     {
         ptr_void_lcl_realloced_memory = malloc(size);
-        memcpy(ptr_void_lcl_realloced_memory, (void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + Fu64__align16(sizeof(struct s_block))), ptr_stc_lcl_block_pointer_to_realloc->u64_size_);
-        free((void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + Fu64__align16(sizeof(struct s_block))));
+        memcpy(ptr_void_lcl_realloced_memory, (void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + fu64__align16(sizeof(struct s_block))), ptr_stc_lcl_block_pointer_to_realloc->u64_size_);
+        free((void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + fu64__align16(sizeof(struct s_block))));
         return (ptr_void_lcl_realloced_memory);
     }
     ptr_stc_lcl_block_pointer_to_realloc->u64_free_size_ = ptr_stc_lcl_block_pointer_to_realloc->u64_size_ - size;
-    return ((void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + Fu64__align16(sizeof(struct s_block))));
+    return ((void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + fu64__align16(sizeof(struct s_block))));
 }
 
 void *calloc(size_t elemn, size_t size)
