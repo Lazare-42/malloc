@@ -6,7 +6,7 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/13 12:06:30 by lazrossi          #+#    #+#             */
-/*   Updated: 2019/10/13 12:20:32 by lazrossi         ###   ########.fr       */
+/*   Updated: 2019/10/14 11:52:29 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,5 +94,7 @@ void *ptr_pssd_pointer_free);
 void								print_alloc_memory(struct s_manipulation
 		*ptr_pssd_manipulation_structure);
 void								show_alloc_mem();
+struct s_page						*fptr_stc_init_blocks_in_page(struct s_page
+		*new_page, struct s_block *pssd_new_block, uint64_t block_size);
 
 #endif

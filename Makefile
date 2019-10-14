@@ -13,6 +13,7 @@ SRCS = 	malloc.c \
 		three_main_functions.c \
 		free.c \
 		show_alloc_mem.c \
+		init_mem_block.c \
 
 SRCS_DIR = ./srcs
 
