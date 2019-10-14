@@ -58,7 +58,6 @@ struct								s_manipulation
 {
 	uint64_t						u64_pagesize;
 	struct s_page					*ptr_stc_page_linked_list;
-	struct s_node_pointer_container *ptr_stc_binary_tree_of_malloced_nodes_;
 };
 
 void								*malloc(size_t size);
