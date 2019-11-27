@@ -25,7 +25,7 @@ INCLUDES = ./includes/
 
 INCLUDES_LIBFT = ./libft/includes/
 
-FLAGS = -fPIC -Wextra -Werror -Wall -std=c99 #-fsanitize=address 
+FLAGS = -g3 -fPIC -Wextra -Werror -Wall -std=c99 #-fsanitize=address 
 
 LDFLAGS = -shared -exported_symbols_list symbol_list
 

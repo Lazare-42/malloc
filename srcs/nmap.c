@@ -1,6 +1,6 @@
 #include "malloc.h"
-#include <stdio.h>
 #include <sys/mman.h>
+#include "libft.h"
 
 /**
  *  Allocates new memory by 
@@ -21,12 +21,12 @@ void    *Fptr_void__nmap(uint64_t u64_pssd_page_number_to_allocate)
     void *ptr_lcl_new_memory;
 
     ptr_lcl_new_memory = NULL;
-    ptr_lcl_new_memory = mmap(NULL, u64_pssd_page_number_to_allocate, 
-    PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-    /**
-     *  No need to check for NULL ; functions calling Fptr_void__nmap
-     *  will do so
-     */
+    if (MAP_FAILED == (ptr_lcl_new_memory = mmap(NULL, u64_pssd_page_number_to_allocate, 
+    PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0)))
+    {
+        ft_dprintf(2, "Mmap returned MAP_FAILED\n");
+        return (NULL);
+    }
     return (ptr_lcl_new_memory);
 }
 

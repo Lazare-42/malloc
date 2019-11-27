@@ -34,7 +34,7 @@ uint8_t Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(struct s
     return (ZERO);
 }
 
-void Fvoid__free_chosen_page(struct s_page *ptr_pssd_first_page_for_category, struct s_page **ptr_pssd_page_to_free_and_browse, struct s_page *ptr_pssd_page_before_page_to_free)
+uint8_t Fvoid__free_chosen_page(struct s_page *ptr_pssd_first_page_for_category, struct s_page **ptr_pssd_page_to_free_and_browse, struct s_page *ptr_pssd_page_before_page_to_free)
 {
     struct s_page   *ptr_stc_lcl_page_to_free;
 
@@ -42,8 +42,13 @@ void Fvoid__free_chosen_page(struct s_page *ptr_pssd_first_page_for_category, st
     ptr_pssd_page_before_page_to_free->ptr_next_page_same_category_ = (*ptr_pssd_page_to_free_and_browse)->ptr_next_page_same_category_;
     ptr_stc_lcl_page_to_free = *ptr_pssd_page_to_free_and_browse;
     (*ptr_pssd_page_to_free_and_browse) = (*ptr_pssd_page_to_free_and_browse)->ptr_next_page_same_category_;
-    munmap(ptr_stc_lcl_page_to_free, ptr_stc_lcl_page_to_free->u64_size_);
+    if (-1 == munmap(ptr_stc_lcl_page_to_free, ptr_stc_lcl_page_to_free->u64_size_))
+        {
+        ft_dprintf(2, "Munmap returned -1\n");
+        return RETURN_FAILURE;
+        }
     ptr_pssd_first_page_for_category->u64_total_number_of_pages_in_category_ -= 1;
+    return RETURN_SUCCESS;
 }
 
 void Fvoid__free_half_of_used_pages_from_one_page_category(struct s_page *ptr_pssd_first_page_for_category)
@@ -60,7 +65,8 @@ void Fvoid__free_half_of_used_pages_from_one_page_category(struct s_page *ptr_ps
     {
         if (ZERO == ptr_stc_lcl_page_to_browse->u64_number_of_used_blocks_in_page_)
         {
-            Fvoid__free_chosen_page(ptr_pssd_first_page_for_category, &ptr_stc_lcl_page_to_browse, ptr_stc_lcl_page_before_last_browsed_elem);
+            if (RETURN_FAILURE == (Fvoid__free_chosen_page(ptr_pssd_first_page_for_category, &ptr_stc_lcl_page_to_browse, ptr_stc_lcl_page_before_last_browsed_elem)))
+                return ;
             u64_lcl_number_of_pages_to_free = u64_lcl_number_of_pages_to_free - 1;
         }
         else

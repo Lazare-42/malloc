@@ -7,6 +7,9 @@
 # define FAILURE (1)
 # define SUCCESS (0)
 
+# define RETURN_FAILURE FAILURE
+# define RETURN_SUCCESS SUCCESS
+
 # define ZERO (0)
 
 # define FALSE  (0)

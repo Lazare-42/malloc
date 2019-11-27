@@ -17,7 +17,7 @@ void free(void *ptr)
      */
     if (ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(ptr_stc_global_static_manipulation_structure, ptr))
     {
-//        ft_printf("[[red]]Rejecting free because pointer was not [[bold]]previously[[end]] [[red]]allocated[[end]]\n");
+        ft_printf("[[red]]Rejecting free because pointer was not [[bold]]previously[[end]] [[red]]allocated[[end]]\n");
         return ;
     }
     ptr_stc_block_pointer_to_free                                           = (struct s_block*)(((uint8_t*)(ptr)) - sizeof(struct s_block));
@@ -30,7 +30,8 @@ void free(void *ptr)
     }
     if (ptr_stc_global_static_manipulation_structure->u64_pagesize < ptr_stc_block_pointer_to_free->u64_size_)
     {
-        munmap(ptr_stc_block_pointer_to_free, ptr_stc_block_pointer_to_free->u64_size_);
+        if (-1 == munmap(ptr_stc_block_pointer_to_free, ptr_stc_block_pointer_to_free->u64_size_))
+            ft_dprintf(2, "Munmap returned -1\n");
     }
     else if ((ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_total_number_of_pages_in_category_ / 3 * 2) > ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_number_of_used_pages_in_category_)
     {
@@ -43,6 +44,8 @@ void    *malloc(size_t size)
     /**
      *  If the manipulation structure is set to NULL, initialize it.
      */
+    if (size < 0)
+        return (NULL);
     if (ptr_stc_global_static_manipulation_structure == NULL)
     {
         ptr_stc_global_static_manipulation_structure = Fptr_stc_manipulation__create_manipulation_structure();
@@ -62,12 +65,12 @@ void *realloc(void *ptr, size_t size)
     ptr_stc_lcl_block_pointer_to_realloc = NULL;
     if (ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(ptr_stc_global_static_manipulation_structure, ptr))
     {
-        return (malloc(size));
-    }
+        return (NULL); }
     ptr_stc_lcl_block_pointer_to_realloc = (struct s_block*)(((uint8_t*)(ptr)) - sizeof(struct s_block));
     if (ptr_stc_lcl_block_pointer_to_realloc->u64_size_ < size)
     {
-        ptr_void_lcl_realloced_memory = malloc(size);
+        if (NULL == (ptr_void_lcl_realloced_memory = malloc(size)))
+            return (NULL);
         memcpy(ptr_void_lcl_realloced_memory, (void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + Fu64__align16(sizeof(struct s_block))), ptr_stc_lcl_block_pointer_to_realloc->u64_size_);
         free((void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + Fu64__align16(sizeof(struct s_block))));
         return (ptr_void_lcl_realloced_memory);
@@ -76,15 +79,15 @@ void *realloc(void *ptr, size_t size)
     return ((void*)(((uint8_t*)ptr_stc_lcl_block_pointer_to_realloc) + Fu64__align16(sizeof(struct s_block))));
 }
 
+void show_alloc_mem()
+{
+    print_alloc_memory(ptr_stc_global_static_manipulation_structure);
+}
+
 void *calloc(size_t elemn, size_t size)
 {
     ft_printf("[[red]]In caloc, function not created yet ![[end]]\n");
     (void)elemn;
     (void)size;
     return NULL;
-}
-
-void show_alloc_mem()
-{
-    print_alloc_memory(ptr_stc_global_static_manipulation_structure);
 }
