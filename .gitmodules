@@ -1,0 +1,3 @@
+[submodule "malloc_test"]
+	path = malloc_test
+	url = https://github.com/bnoufel/malloc_test
