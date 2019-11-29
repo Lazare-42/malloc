@@ -17,7 +17,7 @@ void free(void *ptr)
      */
     if (ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(ptr_stc_global_static_manipulation_structure, ptr))
     {
-        ft_printf("[[red]]Rejecting free because pointer was not [[bold]]previously[[end]] [[red]]allocated[[end]]\n");
+        //ft_printf("[[red]]Rejecting free because pointer was not [[bold]]previously[[end]] [[red]]allocated[[end]]\n");
         return ;
     }
     ptr_stc_block_pointer_to_free                                           = (struct s_block*)(((uint8_t*)(ptr)) - sizeof(struct s_block));
@@ -82,12 +82,4 @@ void *realloc(void *ptr, size_t size)
 void show_alloc_mem()
 {
     print_alloc_memory(ptr_stc_global_static_manipulation_structure);
-}
-
-void *calloc(size_t elemn, size_t size)
-{
-    ft_printf("[[red]]In caloc, function not created yet ![[end]]\n");
-    (void)elemn;
-    (void)size;
-    return NULL;
 }
