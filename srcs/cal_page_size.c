@@ -34,13 +34,24 @@ uint64_t Fu64__return_lower_page_size(uint64_t u64_pssd_next_page_size, uint64_t
 
 uint64_t Fu64__return_upper_page_size(uint64_t u64_previous_page_size, uint64_t u64_pssd_required_size)
 {
+    uint64_t u64_lcl_counter;
     uint64_t u64_lcl_new_page_size;
 
-    u64_lcl_new_page_size = ZERO;
-    u64_lcl_new_page_size = (u64_previous_page_size << 1);
-    while (u64_lcl_new_page_size < u64_pssd_required_size) 
+    u64_lcl_new_page_size = 1;
+    u64_lcl_counter = 1;
+    while (u64_lcl_new_page_size < u64_previous_page_size && u64_lcl_counter < 64)
     {
-    u64_lcl_new_page_size = (u64_lcl_new_page_size << 1);
+        u64_lcl_new_page_size = (u64_lcl_new_page_size << 1);
+        u64_lcl_counter = u64_lcl_counter + 1;
+    }
+    while (u64_lcl_new_page_size < u64_pssd_required_size && u64_lcl_counter < 64)
+    {
+        u64_lcl_new_page_size = (u64_lcl_new_page_size << 1);
+        u64_lcl_counter = u64_lcl_counter + 1;
+    }
+    if (u64_lcl_new_page_size < u64_pssd_required_size)
+    { 
+        u64_lcl_new_page_size = u64_pssd_required_size;
     }
     return (u64_lcl_new_page_size);
 }
@@ -63,10 +74,11 @@ uint64_t Fu64__get_default_page_size_for_page_block_container(struct s_manipulat
     uint64_t    u64_lcl_requested_size;
 
     u64_lcl_requested_size  = ZERO;
-
     u64_lcl_requested_size = Fu64__align16(sizeof(struct s_page))
     + (u64_pssd_number_of_elements != ZERO ? u64_pssd_number_of_elements : 1)
     * (Fu64__align16(sizeof(struct s_block)) +  Fu64__align16(u64_pssd_block_size));
+    if (u64_pssd_block_size * (u64_pssd_number_of_elements != ZERO ? u64_pssd_number_of_elements : 1) > u64_lcl_requested_size)
+        return MAX_UINT64T;
 
     return (Fu64_get_upper_page_size_for_requested_size(ptr_pssd_manipulation_structure, u64_lcl_requested_size));
 }

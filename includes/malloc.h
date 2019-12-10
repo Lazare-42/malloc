@@ -15,8 +15,8 @@
 # define FALSE  (0)
 # define TRUE   (1)
 
-# define TINY (128)
-# define SMALL (256)
+# define TINY (16)
+# define SMALL (32)
 # define MINIMUM_NUMBER_OF_INITIAL_ALLOCATIONS (100)
 
 # define FIRST_BIT      (0x01)
@@ -27,6 +27,8 @@
 # define SIXTH_BIT      (0x20)
 # define SEVENTH_BIT    (0x40)
 # define EIGHTH_BIT     (0x80) 
+
+# define MAX_UINT64T ~((uint64_t)ZERO)
 
 /**
  *  Used structures

@@ -75,12 +75,13 @@ struct s_page *Fu8__create_and_init_new_page_category(struct s_manipulation *ptr
     uint64_t        u64_lcl_number_of_structures_for_asked_size;
     struct s_page   *ptr_lcl_stc_new_page;
 
+    if (u64_pssd_required_size == MAX_UINT64T)
+        return (NULL);
     u64_lcl_minimum_initialization_size         = ZERO;
     u64_lcl_number_of_structures_for_asked_size = ZERO;
     u64_lcl_minimum_initialization_size         = Fu64__get_default_page_size_for_page_block_container(ptr_pssd_stc_manipulation_structure, u64_pssd_required_size, u64_pssd_number_of_elements); 
     u64_lcl_number_of_structures_for_asked_size = Fu64__get_number_of_structure_in_asked_page_size(u64_lcl_minimum_initialization_size, u64_pssd_required_size);
 
-    ptr_lcl_stc_new_page                        = Fptr_void__nmap(u64_lcl_minimum_initialization_size);
     if (NULL == (ptr_lcl_stc_new_page = Fptr_void__nmap(u64_lcl_minimum_initialization_size)))
     {
         return NULL;
@@ -128,5 +129,5 @@ struct s_manipulation *Fptr_stc_manipulation__create_manipulation_structure(void
     {
         return (Fptr_stc_manipulation__init_manipulation(ptr_stc_lcl_manipulation_structure));
     }
-    return NULL;
+    return (NULL);
 }
