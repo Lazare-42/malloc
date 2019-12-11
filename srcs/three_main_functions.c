@@ -6,7 +6,7 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 17:11:31 by lazrossi          #+#    #+#             */
-/*   Updated: 2019/12/11 17:11:33 by lazrossi         ###   ########.fr       */
+/*   Updated: 2019/12/11 18:29:05 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ void	free(void *ptr)
 		page_blck->base_page_category_->nbr_of_used_pages_in_category_ -= 1;
 	if (static_manipulation->pagesize < blck_to_free->size_)
 	{
-		if (-1 == munmap(blck_to_free, blck_to_free->size_))
-			ft_dprintf(2, "Munmap returned -1\n");
+		munmap(blck_to_free, blck_to_free->size_);
 	}
 	else if ((page_blck->base_page_category_->nbr_pages_in_category / 3 * 2)
 		> page_blck->base_page_category_->nbr_of_used_pages_in_category_)
