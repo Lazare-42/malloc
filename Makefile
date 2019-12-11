@@ -12,6 +12,8 @@ SRCS = 	malloc.c \
 		three_main_functions.c \
 		free.c \
 		show_alloc_mem.c \
+		return_adjacent_page_size.c \
+		create.c \
 
 SRCS_DIR = ./srcs
 
@@ -25,7 +27,7 @@ INCLUDES = ./includes/
 
 INCLUDES_LIBFT = ./libft/includes/
 
-FLAGS = -g3 -fPIC -Wextra -Werror -Wall -std=c99 #-fsanitize=address 
+FLAGS = -Wextra -Werror -Wall #-fsanitize=address 
 
 LDFLAGS = -shared -exported_symbols_list symbol_list
 
@@ -40,13 +42,10 @@ all: mkbin $(NAME)
 mkbin:
 	@mkdir -p $(ODIR)
 
-$(NAME): $(LIBDIR) $(LIBFT) $(OBJS) $(SELF)
+$(NAME): $(LIBFT) $(OBJS) $(SELF)
 	 $(COMPILER) $(FLAGS) $(LDFLAGS) -o $(HOSTLIB) $(OBJS) -L$(LIBDIR) -lft
 	ln -sf $(HOSTLIB) $(NAME)
 	echo "\033[37;40mCompiled malloc library with the rules:\t" $(FLAGS) "\033[0m"
-
-$(LIBDIR):  
-	@[[ -d libft ]] || (echo Cloning [libft]... && git clone https://github.com/Lazare-42/libft &>/dev/null)
 
 $(LIBFT):
 	@make -C libft/
