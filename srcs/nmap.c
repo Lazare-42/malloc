@@ -6,7 +6,7 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 16:50:45 by lazrossi          #+#    #+#             */
-/*   Updated: 2019/12/11 18:18:10 by lazrossi         ###   ########.fr       */
+/*   Updated: 2019/12/11 18:27:16 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void						*nmap(uint64_t page_nbr_to_allocate)
 	if (MAP_FAILED == (new_memory = mmap(NULL, page_nbr_to_allocate,
 	PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0)))
 	{
-		ft_dprintf(2, "Mmap returned MAP_FAILED\n");
 		return (NULL);
 	}
 	return (new_memory);
