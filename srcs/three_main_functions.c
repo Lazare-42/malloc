@@ -24,6 +24,12 @@ void free(void *ptr)
     ptr_stc_block_pointer_to_free->u64_free_size_                           = ptr_stc_block_pointer_to_free->u64_size_;
     ptr_stc_page_storing_block_pointer                                      = ptr_stc_block_pointer_to_free->ptr_page_base_;
     ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_  = ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_ - 1;
+
+    ptr_stc_page_storing_block_pointer->ptr_first_occuppied_block_ = ptr_stc_block_pointer_to_free->ptr_next_block_in_page_;
+    if (ptr_stc_page_storing_block_pointer->ptr_first_free_block_ != NULL)
+        ptr_stc_block_pointer_to_free->ptr_next_block_in_page_ = ptr_stc_page_storing_block_pointer->ptr_first_free_block_;
+    ptr_stc_page_storing_block_pointer->ptr_first_free_block_ = ptr_stc_block_pointer_to_free;
+
     if (ZERO == ptr_stc_page_storing_block_pointer->u64_number_of_used_blocks_in_page_)
     {
         ptr_stc_page_storing_block_pointer->ptr_base_page_category_->u64_number_of_used_pages_in_category_ -= 1;
