@@ -6,7 +6,7 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 17:11:31 by lazrossi          #+#    #+#             */
-/*   Updated: 2019/12/11 18:29:05 by lazrossi         ###   ########.fr       */
+/*   Updated: 2020/01/08 09:53:58 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ void	free(void *ptr)
 	blck_to_free = (struct s_blck*)(((uint8_t*)(ptr)) - sizeof(struct s_blck));
 	blck_to_free->free_size_ = blck_to_free->size_;
 	page_blck = blck_to_free->page_base_;
-	page_blck->nbr_of_used_blcks_in_page_ =
-		page_blck->nbr_of_used_blcks_in_page_ - 1;
+	push_freed_block_on_page_stack(blck_to_free, page_blck);
 	if (ZERO == page_blck->nbr_of_used_blcks_in_page_)
 		page_blck->base_page_category_->nbr_of_used_pages_in_category_ -= 1;
 	if (static_manipulation->pagesize < blck_to_free->size_)

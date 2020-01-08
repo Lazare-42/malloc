@@ -6,7 +6,7 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 15:57:28 by lazrossi          #+#    #+#             */
-/*   Updated: 2019/12/11 18:28:27 by lazrossi         ###   ########.fr       */
+/*   Updated: 2020/01/08 09:55:07 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,15 @@ void		free_half_page_category(
 			page_to_browse = page_to_browse->nt_page_same_category_;
 		}
 	}
+}
+
+void		push_freed_block_on_page_stack(struct s_blck *blck_to_free,
+		struct s_page *page_blck)
+{
+	page_blck->nbr_of_used_blcks_in_page_ =
+		page_blck->nbr_of_used_blcks_in_page_ - 1;
+	page_blck->first_occuppied_blck_ = blck_to_free->nt_blck_in_page_;
+	if (page_blck->first_free_blck_ != NULL)
+		blck_to_free->nt_blck_in_page_ = page_blck->first_free_blck_;
+	page_blck->first_free_blck_ = blck_to_free;
 }

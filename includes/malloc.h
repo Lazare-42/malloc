@@ -6,7 +6,7 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 18:15:25 by lazrossi          #+#    #+#             */
-/*   Updated: 2019/12/11 18:21:20 by lazrossi         ###   ########.fr       */
+/*   Updated: 2020/01/08 09:53:23 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,7 @@ void								print_alloc_memory(
 void								show_alloc_mem();
 void								*nmap(uint64_t page_nbr_to_allocate);
 uint64_t							get_max_uint64t();
+void								push_freed_block_on_page_stack(
+		struct s_blck *blck_to_free, struct s_page *page_blck);
 
 #endif
