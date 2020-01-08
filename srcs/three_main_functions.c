@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/11 17:11:31 by lazrossi          #+#    #+#             */
-/*   Updated: 2020/01/08 10:07:11 by lazrossi         ###   ########.fr       */
+/*   Created: 2020/01/08 14:51:55 by lazrossi          #+#    #+#             */
+/*   Updated: 2020/01/08 14:51:57 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,16 @@ void	*realloc(void *ptr, size_t size)
 
 	size = align16(size);
 	blck_to_realloc = NULL;
+	if (ptr == NULL)
+		return (malloc(size));
+	if (static_manipulation == NULL
+			|| ZERO == check_prev_realloc(static_manipulation, ptr))
+		return (0);
 	if (size == 0)
 	{
 		free(ptr);
 		return (malloc(0));
 	}
-	if (static_manipulation == NULL
-			|| ZERO == check_prev_realloc(static_manipulation, ptr))
-		return (malloc(size));
 	blck_to_realloc = (struct s_blck*)(((uint8_t*)(ptr))
 			- sizeof(struct s_blck));
 	if (blck_to_realloc->size_ < size)
