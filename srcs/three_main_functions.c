@@ -76,9 +76,11 @@ void *realloc(void *ptr, size_t size)
         free(ptr);
         return (malloc(0));
     }
+    if (ptr == NULL)
+        return (malloc(size));
     if (ptr_stc_global_static_manipulation_structure == NULL || ZERO == Fu8__bool_check_if_pointer_passed_to_free_was_previously_malloc(ptr_stc_global_static_manipulation_structure, ptr))
     {
-        return (malloc(size));
+        return (NULL);
     }
     ptr_stc_lcl_block_pointer_to_realloc = (struct s_block*)(((uint8_t*)(ptr)) - sizeof(struct s_block));
     if (ptr_stc_lcl_block_pointer_to_realloc->u64_size_ < size)
