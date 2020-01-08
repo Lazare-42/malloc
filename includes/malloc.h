@@ -6,7 +6,7 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 18:15:25 by lazrossi          #+#    #+#             */
-/*   Updated: 2020/01/08 09:53:23 by lazrossi         ###   ########.fr       */
+/*   Updated: 2020/01/08 10:03:15 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 # define FALSE  0
 # define TRUE   1
 
-# define TINY 16
-# define SMALL 32
+# define TINY 8
+# define SMALL 16
 # define MINIMUM_NBR_OF_INITIAL_ALLOCATIONS 100
 
 # define FIRST_BIT	  	0x01
