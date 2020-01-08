@@ -6,14 +6,12 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 17:11:31 by lazrossi          #+#    #+#             */
-/*   Updated: 2020/01/08 09:53:58 by lazrossi         ###   ########.fr       */
+/*   Updated: 2020/01/08 10:07:11 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #include <sys/mman.h>
-#include <string.h>
-#include <stdio.h>
 #include "libft.h"
 
 static struct s_manipulation *static_manipulation = NULL;
@@ -64,7 +62,7 @@ void	*realloc_uppersize(struct s_blck *blck_to_realloc, size_t size)
 	void_realloced_memory = NULL;
 	if (NULL == (void_realloced_memory = malloc(size)))
 		return (NULL);
-	memcpy(void_realloced_memory, (void*)(((uint8_t*)
+	ft_memcpy(void_realloced_memory, (void*)(((uint8_t*)
 	blck_to_realloc) +
 	align16(sizeof(struct s_blck))), blck_to_realloc->size_);
 	free((void*)(((uint8_t*)blck_to_realloc)

@@ -6,14 +6,13 @@
 /*   By: lazrossi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 15:47:28 by lazrossi          #+#    #+#             */
-/*   Updated: 2019/12/11 18:17:51 by lazrossi         ###   ########.fr       */
+/*   Updated: 2020/01/08 10:05:45 by lazrossi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #include "libft.h"
 #include <sys/mman.h>
-#include <string.h>
 
 uint64_t	align16(size_t nbr)
 {
